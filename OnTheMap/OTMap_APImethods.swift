@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 extension OTMap_Tasks {
     
@@ -17,10 +18,9 @@ extension OTMap_Tasks {
         udacityPostMethod(emailAccountText,userPwdText) { (result, errorString) in
             
             if result != nil {
-            completionHandlerForSession(true, errorString)
+                completionHandlerForSession(true, errorString)
             } else {
-                
-            completionHandlerForSession(false,errorString  )
+                completionHandlerForSession(false,errorString  )
             }
         }
     }
@@ -48,16 +48,13 @@ extension OTMap_Tasks {
                 } else {
                     completionHandlerForLogin(nil, NSError(domain: "line near 54 APIMethods user login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account0"]))
                 }
-                
             }
-            
         }
-        
     }
     
     func loadStudentLocations(completionHandlerForLocations: @escaping (_ success: Bool,_ errorString: NSError?) -> Void) {
         
-       let urlString = "https://parse.udacity.com/parse/classes/StudentLocation"
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation"
         
         //the fully formed network request
         let request = NSMutableURLRequest(url: URL(string:urlString)!)
@@ -68,49 +65,61 @@ extension OTMap_Tasks {
         //active call to server
         let _ = taskForGET(request as URLRequest) { ( response, error ) in
             
-                if error != nil {
-                    completionHandlerForLocations(false, NSError(domain: " URLRequest", code: 0, userInfo: [NSLocalizedDescriptionKey: "error downloading data"]))
+            if error != nil {
+                completionHandlerForLocations(false, NSError(domain: " URLRequest", code: 1, userInfo: [NSLocalizedDescriptionKey: "error downloading data"]))
                 return
-                    
+                
             } else {
                 if let results = response?[OTMap_Tasks.JSONResponseKeys.Results] as? [[String:AnyObject]] {
                     
                     for studentInfo in results {
-                       let  newRecord = StudentInformation(studentInfo)
-                        StudentInformationArray.append(newRecord)
+                        let  newRecord = StudentInformation(studentInfo)
+                        var objectIDArray = [String]()
+                        if StudentInformationArray.count > 0 {
+                            
+                            //create array of objectIDs to check for dupes, so we only add new IDs found during download
+                            for existingID in StudentInformationArray {
+                                objectIDArray.append(existingID.objectId)
+                            }
+                            if objectIDArray.contains(newRecord.objectId) {
+                            }  else {
+                                self.appendToStudentLocationArray(newRecord)
+                            }
+                        } else {
+                            self.appendToStudentLocationArray(newRecord)
+                        }
                     }
-  
                     completionHandlerForLocations(true,nil)
-                   // self.studentLocations = results as [String : AnyObject]?
+                    // self.studentLocations = results as [String : AnyObject]?
                 } else {
                     completionHandlerForLocations(false,NSError(domain: "JSONResults", code: 1, userInfo: [NSLocalizedDescriptionKey:" could not get JSON data results"]))
                 }
-                
             }
-
         }
-        
     }
     
+    func appendToStudentLocationArray(_ addRecord: StudentInformation){
+        StudentInformationArray.append(addRecord)
+    }
     
-    //    private func OTMapURLFromParameters(_ parameters:[String:AnyObject], withPathExtension: String? = nil) -> URL {
-    //        var components = URLComponents()
-    //
-    //        components.scheme = OTMap_Tasks.Constants.ApiScheme
-    //        components.host = OTMap_Tasks.Constants.ApiHost
-    //        components.path = OTMap_Tasks.Constants.ApiPath + (withPathExtension ?? "")
-    //        components.queryItems = [URLQueryItem]()
-    //
-    //        for (key,value) in parameters {
-    //            let queryItem = URLQueryItem(name: key, value: "\(value)")
-    //            components.queryItems!.append(queryItem)
-    //        }
-    //        print("")
-    //        print("")
-    //        print("components.url!",components.url!)
-    //        print("")
-    //        print("")
-    //        return components.url!
-    //    }
-    
+    func postNewLocation(_ mediaURL:String,_ coordinate: CLLocationCoordinate2D, _ address:String, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
+        
+        let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
+        request.httpMethod = "POST"
+        request.addValue(OTMap_Tasks.Constants.ApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart00\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}".data(using: String.Encoding.utf8)
+        
+        let session = URLSession.shared
+        
+        let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            if error != nil { // Handle error…
+                return
+            }
+            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+        }
+        task.resume()
+    }
 }

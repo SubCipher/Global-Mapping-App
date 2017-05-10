@@ -96,10 +96,7 @@ class OTMap_Tasks: NSObject {
                 sendError("no data was returned by the request")
                 return
             }
-            
-           
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
-            
+                self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
             }
         task.resume()
         
@@ -117,7 +114,6 @@ class OTMap_Tasks: NSObject {
             completionHandlerForConvertData(true as AnyObject?,NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         completionHandlerForConvertData(parsedResult as AnyObject?,nil)
-        
     }
     
     

@@ -7,29 +7,76 @@
 //
 
 import UIKit
+import CoreLocation
 
 class PostViewController: UIViewController {
-
+    
+    //geocode implementation based on tutorial from https://cocoacasts.com/forward-and-reverse-geocoding-with-clgeocoder-part-1/
+    
+    @IBOutlet weak var streetTextField: UITextField!
+    
+    @IBOutlet weak var cityTextField: UITextField!
+    @IBOutlet weak var countryTextField: UITextField!
+    
+    @IBOutlet weak var mediaURL: UITextField!
+    
+    @IBOutlet weak var geocodeButton: UIButton!
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var locationLabel: UILabel!
+    
+    lazy var geocoder = CLGeocoder()
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        activityIndicatorView.isHidden = true
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func geocodeAction(_ sender: UIButton) {
+        
+        guard let country = countryTextField.text else {return}
+        guard let street = streetTextField.text else {return}
+        guard let city = cityTextField.text else {return}
+        
+        
+        let address = "\(country) " + "\(city) " +  "\(street)"
+        
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            
+            self.activityIndicatorView.isHidden = true
+            self.submitGeocodeResponse(address, withPlacemarks: placemarks,error: error)
+        }
+        geocodeButton.isHidden = true
+        activityIndicatorView.isHidden = false
+        activityIndicatorView.startAnimating()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    private func submitGeocodeResponse(_ address: String, withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
+        geocodeButton.isHidden = false
+        activityIndicatorView.stopAnimating()
+        
+        if error != nil {
+            print("error obtaining geocode")
+            locationLabel.text = "no address found"
+            return
+        } else {
+            var location: CLLocation?
+            
+            if let placemarks = placemarks, placemarks.count > 0 {
+                location = placemarks.first?.location
+            }
+            if let location = location {
+                let coordinate = location.coordinate
+                let mediaURLText = mediaURL.text
+                locationLabel.text = "\(coordinate.latitude), \(coordinate.longitude)"
+                OTMap_Tasks.sharedInstance().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate,address) {(success,error) in
+                }
+                locationLabel.text = "Location not found"
+            }
+        }
     }
-    */
 
+    @IBAction func cancelPost(_ sender: UIBarButtonItem) {
+        
+        self.dismiss(animated: true, completion: nil)
+        }
 }
+

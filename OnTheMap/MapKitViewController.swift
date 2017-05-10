@@ -39,20 +39,27 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
                         annotation.title = "\(first) \(last)"
                         annotation.subtitle = medidaURL
                         
-                        annotations.append(annotation)
-                    }
+                        if annotations .contains(annotation) {
+                            print("already added")
+                        } else {
+                            annotations.append(annotation)
+
+                        }
+                                           }
                     self.mapView.addAnnotations(annotations)
                 }
 
             } else {
-                
-                print("success completion value = \(success) error message = \(errorString?.description) ")
                 
                 let actionSheet = UIAlertController(title: "Error Downloading", message: errorString?.localizedDescription, preferredStyle: .alert)
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(actionSheet,animated: true,completion: nil)
             }
         })
+    }
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+
     }
     
     //MARK: - MKMapViewDelegate

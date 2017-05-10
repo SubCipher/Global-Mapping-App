@@ -29,6 +29,7 @@ class LoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    
         
         //hide lables until user submits empty fields at login
         missingUserAccountLabel.isHidden = true

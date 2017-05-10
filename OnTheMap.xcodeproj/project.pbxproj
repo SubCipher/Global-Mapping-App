@@ -18,10 +18,12 @@
 		201D175A1EAD2FAB003730A4 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201D17591EAD2FAB003730A4 /* PostViewController.swift */; };
 		203C976D1EBEC32E00B908EF /* OTMap_NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203C976C1EBEC32E00B908EF /* OTMap_NetworkReachability.swift */; };
 		203C976F1EBEEB4600B908EF /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203C976E1EBEEB4600B908EF /* StudentInformation.swift */; };
+		2050ACF11EC162F800EAA9F3 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */; };
 		20C51E2C1EAB97DA00C93A0D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C51E2B1EAB97DA00C93A0D /* AppDelegate.swift */; };
 		20C51E311EAB97DA00C93A0D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C51E2F1EAB97DA00C93A0D /* Main.storyboard */; };
 		20C51E331EAB97DA00C93A0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C51E321EAB97DA00C93A0D /* Assets.xcassets */; };
 		20C51E361EAB97DA00C93A0D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C51E341EAB97DA00C93A0D /* LaunchScreen.storyboard */; };
+		20E99E451EC2BE5A006526EA /* UpdateStudentLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E99E441EC2BE5A006526EA /* UpdateStudentLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,12 +38,14 @@
 		201D17591EAD2FAB003730A4 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		203C976C1EBEC32E00B908EF /* OTMap_NetworkReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMap_NetworkReachability.swift; sourceTree = "<group>"; };
 		203C976E1EBEEB4600B908EF /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
+		2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		20C51E281EAB97DA00C93A0D /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C51E2B1EAB97DA00C93A0D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		20C51E301EAB97DA00C93A0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		20C51E321EAB97DA00C93A0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		20C51E351EAB97DA00C93A0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20C51E371EAB97DA00C93A0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		20E99E441EC2BE5A006526EA /* UpdateStudentLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateStudentLocationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 				201D17551EAD2F6E003730A4 /* MapKitViewController.swift */,
 				201D17591EAD2FAB003730A4 /* PostViewController.swift */,
 				201D17571EAD2F8D003730A4 /* TableViewController.swift */,
+				2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */,
+				20E99E441EC2BE5A006526EA /* UpdateStudentLocationViewController.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -200,7 +206,9 @@
 				201D17541EAD2F38003730A4 /* LoginViewController.swift in Sources */,
 				203C976D1EBEC32E00B908EF /* OTMap_NetworkReachability.swift in Sources */,
 				2000A3291EAF227E00967794 /* OTMap_Tasks.swift in Sources */,
+				20E99E451EC2BE5A006526EA /* UpdateStudentLocationViewController.swift in Sources */,
 				201D17581EAD2F8D003730A4 /* TableViewController.swift in Sources */,
+				2050ACF11EC162F800EAA9F3 /* TabBarViewController.swift in Sources */,
 				2000A32B1EAF817400967794 /* GCDqueue.swift in Sources */,
 				201D175A1EAD2FAB003730A4 /* PostViewController.swift in Sources */,
 				201D17561EAD2F6E003730A4 /* MapKitViewController.swift in Sources */,

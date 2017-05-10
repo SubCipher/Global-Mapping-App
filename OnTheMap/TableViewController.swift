@@ -37,10 +37,20 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         cell.textLabel?.text =  "\( singleCell.firstName )"  +  "\( singleCell.lastName )"
         cell.detailTextLabel?.text = "\(singleCell.mediaURL)"
-        
+    
         return cell
     }
     //delete on swipe
+    
+    internal func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+       
+        print("student location",StudentInformationArray[indexPath.row])
+        let updateViewController = self.storyboard!.instantiateViewController(withIdentifier: "UpdateStudentLocationViewController") as! UpdateStudentLocationViewController
+        
+        updateViewController.updateStudentAtLocation = StudentInformationArray[indexPath.row]
+        self.navigationController!.pushViewController(updateViewController, animated: true)
+    }
+    
     internal func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
@@ -50,6 +60,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        
         print("row selected")
         let app = UIApplication.shared
         let goToWeb = StudentInformationArray[indexPath.row].mediaURL
