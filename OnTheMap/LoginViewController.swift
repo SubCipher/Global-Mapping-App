@@ -57,7 +57,7 @@ class LoginViewController: UIViewController {
         //userPwdText = userPwdTextField.text
         
         
-        OTMap_Tasks.sharedInstance().udacityAuthLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
+        OTMap_Tasks.sharedInstance().udacityPostMethod(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
             performUpdatesOnMainQueue {
                 if success {
                     self.completeLogin()

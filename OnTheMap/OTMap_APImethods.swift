@@ -11,22 +11,9 @@ import CoreLocation
 
 extension OTMap_Tasks {
     
-    
-    func udacityAuthLogin(_ emailAccountText:String, _ userPwdText:String,
-                          completionHandlerForSession: @escaping ( _ success: Bool, _ errorString: NSError?) -> Void) {
-        
-        udacityPostMethod(emailAccountText,userPwdText) { (result, errorString) in
-            
-            if result != nil {
-                completionHandlerForSession(true, errorString)
-            } else {
-                completionHandlerForSession(false,errorString  )
-            }
-        }
-    }
-    
+  
     func udacityPostMethod(_ username:String, _ pwd: String,
-                           _ completionHandlerForLogin: @escaping ( _ result: AnyObject?, _ error: NSError?) -> Void)  {
+                           _ completionHandlerForLogin: @escaping ( _ success:Bool , _ error: NSError?) -> Void)  {
         
         /*1. specify the parameters */
         
@@ -38,22 +25,21 @@ extension OTMap_Tasks {
         
         let _ = taskForPOSTMethod( mutableMethod, jsonBody: jsonBody) { (results, error) in
             
-            /*3. send values to competion handler */
+        //*3. send values to competion handler */
             if let error = error {
-                completionHandlerForLogin(nil, error)
+                completionHandlerForLogin(false, error)
             } else {
-                if let results = results?[OTMap_Tasks.JSONResponseKeys.SessionID] as? [String:AnyObject] {
-                    
-                    completionHandlerForLogin(results as AnyObject?,nil)
+                if let session = results?[OTMap_Tasks.JSONResponseKeys.SessionID] as? [String:AnyObject] {
+                            completionHandlerForLogin(true,nil)
                 } else {
-                    completionHandlerForLogin(nil, NSError(domain: "line near 54 APIMethods user login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account0"]))
+                    completionHandlerForLogin(false, NSError(domain: "line near 54 APIMethods user login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account0"]))
                 }
             }
         }
     }
     
     func loadStudentLocations(completionHandlerForLocations: @escaping (_ success: Bool,_ errorString: NSError?) -> Void) {
-        
+    
         let urlString = "https://parse.udacity.com/parse/classes/StudentLocation"
         
         //the fully formed network request
