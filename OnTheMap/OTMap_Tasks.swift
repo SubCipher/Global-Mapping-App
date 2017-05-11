@@ -11,7 +11,8 @@ import Foundation
 class OTMap_Tasks: NSObject {
     
    var studentLocations: [String:AnyObject]? = nil
-    //var sessionID: String? = nil
+    var sessionID = [String:AnyObject]()
+    
     var session = URLSession.shared
         
     override init() {

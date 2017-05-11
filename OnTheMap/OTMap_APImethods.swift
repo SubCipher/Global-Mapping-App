@@ -30,6 +30,7 @@ extension OTMap_Tasks {
                 completionHandlerForLogin(false, error)
             } else {
                 if let session = results?[OTMap_Tasks.JSONResponseKeys.SessionID] as? [String:AnyObject] {
+                    self.sessionID = session
                             completionHandlerForLogin(true,nil)
                 } else {
                     completionHandlerForLogin(false, NSError(domain: "line near 54 APIMethods user login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account0"]))

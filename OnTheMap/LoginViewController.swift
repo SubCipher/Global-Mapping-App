@@ -22,19 +22,20 @@ class LoginViewController: UIViewController {
     var emailAccountText: String? = nil
     var userPwdText: String? = nil
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     
         
-        //hide lables until user submits empty fields at login
+        //hide lables; not needed until empty fields flagged at login
         missingUserAccountLabel.isHidden = true
         missingPwdLabel.isHidden = true
     }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
         reachability?.stopNotifier()
@@ -58,6 +59,7 @@ class LoginViewController: UIViewController {
         
         
         OTMap_Tasks.sharedInstance().udacityPostMethod(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
+           
             performUpdatesOnMainQueue {
                 if success {
                     self.completeLogin()
