@@ -20,10 +20,10 @@ class OTMap_Tasks: NSObject {
     }
 
 
-    func taskForPOSTMethod(_ method: String, jsonBody: String, completionHandlerForPOST: @escaping (_ result:
+    func taskForUdacityPOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForPOST: @escaping (_ result:
         AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
-        var request = URLRequest(url: URL(string: Constants.AuthorizationURL)!)
+        var request = URLRequest(url: URL(string: method)!)
         
         request.httpMethod = "Post"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -76,6 +76,73 @@ class OTMap_Tasks: NSObject {
         task.resume()
         return task
         }
+    
+    
+    func taskForParsePOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForPOST: @escaping (_ result:
+        AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+        
+        var request = URLRequest(url: URL(string: method)!)
+        print("URL request",request)
+        
+        request.httpMethod = "POST"
+        request.addValue(OTMap_Tasks.Constants.ApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonBody.data(using: String.Encoding.utf8)
+        
+        
+        
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            func sendError(_ error: String) {
+                
+                let userInfo = [NSLocalizedDescriptionKey: error]
+                completionHandlerForPOST(nil, NSError(domain: "TaskForPost", code: 1, userInfo: userInfo))
+                print("return error = ",error)
+            }
+            
+            guard (error == nil) else {
+                sendError("there was an error with your request")
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                
+                //parse account errors: valid account vs. bad authentication
+                let responseValue = (response as? HTTPURLResponse)?.statusCode
+                if let responseValue = responseValue {
+                   print(responseValue)
+                }
+                
+                return
+            }
+            
+            guard let data = data else {
+                sendError("no data was returned by the request")
+                return
+            }
+            
+            //if let data = data {
+            let range = Range(5..<data.count)
+            let newData = data.subdata(in: range) /* subset response data! */
+            
+            self.convertDataWithCompletionHandler(newData,completionHandlerForConvertData: completionHandlerForPOST)
+        }
+        
+        task.resume()
+        return task
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     func taskForGET( _ request :URLRequest, completionHandlerForGET: @escaping (_ result:AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         

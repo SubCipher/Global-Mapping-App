@@ -65,7 +65,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         print("row selected")
         let app = UIApplication.shared
         let goToWeb = StudentInformationArray[indexPath.row].mediaURL
-            app.open(URL(string: goToWeb)!)
+        //use default website to prevent fail if no URL is assigned to location
+        let defaultWebSite = (URL(string: "http://udacity.com")!)
+        app.open(URL(string: goToWeb) ?? defaultWebSite)
         
         
     }

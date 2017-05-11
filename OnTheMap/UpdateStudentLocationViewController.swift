@@ -46,9 +46,6 @@ class UpdateStudentLocationViewController: UIViewController {
         mapString.text = updateStudentAtLocation.mapString
         mediaURL.text = updateStudentAtLocation.mediaURL
         
-        
-        print("printed value = ",objectID.text ?? "")
-        // Do any additional setup after loading the view.
     }
     
     @IBAction func updateLocationRecord(_ sender: UIButton) {

@@ -12,18 +12,19 @@ import CoreLocation
 extension OTMap_Tasks {
     
   
-    func udacityPostMethod(_ username:String, _ pwd: String,
+    func udacityPostForLogin(_ username:String, _ pwd: String,
                            _ completionHandlerForLogin: @escaping ( _ success:Bool , _ error: NSError?) -> Void)  {
         
         /*1. specify the parameters */
         
-        let mutableMethod: String = Methods.SessionURL
+        let mutableMethod: String = Constants.AuthorizationURL
+        
         
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(pwd)\"}}"
         
         /*2. make the request */
         
-        let _ = taskForPOSTMethod( mutableMethod, jsonBody: jsonBody) { (results, error) in
+        let _ = taskForUdacityPOSTMethod( mutableMethod, jsonBody) { (results, error) in
             
         //*3. send values to competion handler */
             if let error = error {
@@ -85,28 +86,27 @@ extension OTMap_Tasks {
         }
     }
     
+    //MARK: - apend records to arry
     func appendToStudentLocationArray(_ addRecord: StudentInformation){
         StudentInformationArray.append(addRecord)
     }
     
+    //MARK: - post new location (parse api)
     func postNewLocation(_ mediaURL:String,_ coordinate: CLLocationCoordinate2D, _ address:String, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
         
-        let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-        request.httpMethod = "POST"
-        request.addValue(OTMap_Tasks.Constants.ApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        let  mutableMethod = "https://parse.udacity.om/parse/classes/StudentLocation"
         
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart00\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}".data(using: String.Encoding.utf8)
+        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart04\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
         
-        let session = URLSession.shared
-        
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error…
-                return
+        let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) { response, error in
+            
+            if let error = error {
+                
+                completionHandlerForPostNewLocation(false, error)
+            } else {
+                completionHandlerForPostNewLocation(true, nil)
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+        
         }
-        task.resume()
     }
 }

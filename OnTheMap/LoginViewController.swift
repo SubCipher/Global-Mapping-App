@@ -10,8 +10,11 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    var reachability = OTMap_NetworkReachability(hostName: "https://udacity.com")
-    //var reachability: OTMap_NetworkReachability? = OTMap_NetworkReachability.networkReachabilityForInternetConnection()
+    @IBOutlet weak var connectionStatus: UIView!
+   
+    //option to check for single host: => var reachability = OTMap_NetworkReachability(hostName: "https://udacity.com")
+    //check for an open connection to the internet
+    var reachability: OTMap_NetworkReachability? = OTMap_NetworkReachability.networkReachabilityForInternetConnection()
     
     @IBOutlet weak var userAccountTextField: UITextField!
     @IBOutlet weak var userPwdTextField: UITextField!
@@ -22,32 +25,34 @@ class LoginViewController: UIViewController {
     var emailAccountText: String? = nil
     var userPwdText: String? = nil
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        
-//    }
+    //MARK: - Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //check network reachability
+        checkReachability()
+        
+        //set notificationCenter for changes in network state
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityDidChange(_:)), name: NSNotification.Name(rawValue: ReachabilityDidChangeNotificationName), object: nil)
+        _ = reachability?.startNotifier()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    
         
         //hide lables; not needed until empty fields flagged at login
         missingUserAccountLabel.isHidden = true
         missingPwdLabel.isHidden = true
     }
     
+    //remove notificationCenter when class is deallocated 
+    //https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Deinitialization.html
     deinit {
         NotificationCenter.default.removeObserver(self)
         reachability?.stopNotifier()
     }
     
     @IBAction func udacityAuthLogin(_ sender: AnyObject) {
-        /*
-         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityDidChange(_:)), name: NSNotification.Name(rawValue: ReachabilityDidChangeNotificationName), object: nil)
-         _ = reachability?.startNotifier()
-         
-         */
-        checkReachability()
+        udacityLogin()
     }
     
     func udacityLogin() {
@@ -57,9 +62,8 @@ class LoginViewController: UIViewController {
         //emailAccountText = userAccountTextField.text
         //userPwdText = userPwdTextField.text
         
-        
-        OTMap_Tasks.sharedInstance().udacityPostMethod(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
-           
+        OTMap_Tasks.sharedInstance().udacityPostForLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
+           //add action to main queue
             performUpdatesOnMainQueue {
                 if success {
                     self.completeLogin()
@@ -79,6 +83,7 @@ class LoginViewController: UIViewController {
     }
     
     func completeLogin(){
+    
         let controller = storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
         present(controller, animated: true, completion: nil)
     }
@@ -94,14 +99,13 @@ extension LoginViewController {
     //network reachability
     
     func checkReachability() {
-        guard let r = reachability else { return }
+        guard let networkState = reachability else { return }
         
-        if r.isReachable {
-            //view.backgroundColor = UIColor.green
-            udacityLogin()
-        } else {
+        if networkState.isReachable {
+            connectionStatus.backgroundColor = UIColor.init(red: 0.0, green: 1.0, blue: 0.0, alpha: 0.5)
+            } else {
             //change background color to light red to indicate connection failure
-            view.backgroundColor = UIColor.init(red: 5.0, green: 2.0, blue: 2.0, alpha: 0.4)
+            connectionStatus.backgroundColor = UIColor.init(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.5)
             
             let actionSheet = UIAlertController(title: "NETWORK ERROR", message: "Your Internet Connection Cannot Be Detected", preferredStyle: .alert)
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

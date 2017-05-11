@@ -16,6 +16,7 @@
 		201D17561EAD2F6E003730A4 /* MapKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201D17551EAD2F6E003730A4 /* MapKitViewController.swift */; };
 		201D17581EAD2F8D003730A4 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201D17571EAD2F8D003730A4 /* TableViewController.swift */; };
 		201D175A1EAD2FAB003730A4 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201D17591EAD2FAB003730A4 /* PostViewController.swift */; };
+		202EC2AD1EC44DF800392812 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202EC2AC1EC44DF800392812 /* WebViewViewController.swift */; };
 		203C976D1EBEC32E00B908EF /* OTMap_NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203C976C1EBEC32E00B908EF /* OTMap_NetworkReachability.swift */; };
 		203C976F1EBEEB4600B908EF /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203C976E1EBEEB4600B908EF /* StudentInformation.swift */; };
 		2050ACF11EC162F800EAA9F3 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */; };
@@ -36,6 +37,7 @@
 		201D17551EAD2F6E003730A4 /* MapKitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapKitViewController.swift; sourceTree = "<group>"; };
 		201D17571EAD2F8D003730A4 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		201D17591EAD2FAB003730A4 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		202EC2AC1EC44DF800392812 /* WebViewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		203C976C1EBEC32E00B908EF /* OTMap_NetworkReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMap_NetworkReachability.swift; sourceTree = "<group>"; };
 		203C976E1EBEEB4600B908EF /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 		2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				201D17591EAD2FAB003730A4 /* PostViewController.swift */,
 				201D17571EAD2F8D003730A4 /* TableViewController.swift */,
 				2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */,
+				202EC2AC1EC44DF800392812 /* WebViewViewController.swift */,
 				20E99E441EC2BE5A006526EA /* UpdateStudentLocationViewController.swift */,
 			);
 			name = ViewController;
@@ -203,6 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				202EC2AD1EC44DF800392812 /* WebViewViewController.swift in Sources */,
 				201D17541EAD2F38003730A4 /* LoginViewController.swift in Sources */,
 				203C976D1EBEC32E00B908EF /* OTMap_NetworkReachability.swift in Sources */,
 				2000A3291EAF227E00967794 /* OTMap_Tasks.swift in Sources */,

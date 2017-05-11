@@ -60,16 +60,15 @@ class PostViewController: UIViewController {
         } else {
             var location: CLLocation?
             
-            if let placemarks = placemarks, placemarks.count > 0 {
+            if let placemarks = placemarks  {
                 location = placemarks.first?.location
-            }
-            if let location = location {
-                let coordinate = location.coordinate
+                let coordinate = location?.coordinate
                 let mediaURLText = mediaURL.text
-                locationLabel.text = "\(coordinate.latitude), \(coordinate.longitude)"
-                OTMap_Tasks.sharedInstance().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate,address) {(success,error) in
+                locationLabel.text = "\(coordinate!.latitude) " + "\(coordinate!.longitude)"
+                print(locationLabel.text!)
+                OTMap_Tasks.sharedInstance().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate!,address) {(success,error) in
+                    
                 }
-                locationLabel.text = "Location not found"
             }
         }
     }
