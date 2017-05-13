@@ -42,36 +42,71 @@ class PostViewController: UIViewController {
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             
             self.activityIndicatorView.isHidden = true
-            self.submitGeocodeResponse(address, withPlacemarks: placemarks,error: error)
-        }
+            self.postNewGeocodeLocation(address, withPlacemarks: placemarks,error: error)
+            }
+        
         geocodeButton.isHidden = true
         activityIndicatorView.isHidden = false
         activityIndicatorView.startAnimating()
     }
     
-    private func submitGeocodeResponse(_ address: String, withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
+    //MARK- POST newLocation
+    
+    private func postNewGeocodeLocation(_ address: String, withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
         geocodeButton.isHidden = false
         activityIndicatorView.stopAnimating()
         
         if error != nil {
-            print("error obtaining geocode")
+            
+            let actionSheet = UIAlertController(title: "ERROR", message: "could not get address, pls check your entry", preferredStyle: .alert)
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(actionSheet,animated: true, completion: nil)
+
             locationLabel.text = "no address found"
-            return
+            //return
         } else {
             var location: CLLocation?
-            
+            //do some prep
             if let placemarks = placemarks  {
+                //if multiple results choose the first one
                 location = placemarks.first?.location
                 let coordinate = location?.coordinate
+                
                 let mediaURLText = mediaURL.text
+                //display coordinates on view screen
                 locationLabel.text = "\(coordinate!.latitude) " + "\(coordinate!.longitude)"
-                print(locationLabel.text!)
-                OTMap_Tasks.sharedInstance().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate!,address) {(success,error) in
+                
+                //send required parameters, with the string for URL defaulted to udacity.com
+                
+                
+                
+                
+                OTMap_Tasks().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate!,address) {(success,error) in
+                
                     
+                    
+            performUpdatesOnMainQueue {
+                print("success,error",success,error ?? 0)
+                if success == false{
+                    
+                    print("false")
+                    
+                    let actionSheet = UIAlertController(title: "ERROR", message: "record update failed to post", preferredStyle: .alert)
+                    actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    self.present(actionSheet,animated: true, completion: nil)
+                    } else {
+                        print("success result =",success)
+                       //self.dismiss(animated: true, completion: nil)
+                    
+                      let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
+                      self.present(controller, animated: true, completion: nil)
+
+                    }
                 }
             }
         }
     }
+}
 
     @IBAction func cancelPost(_ sender: UIBarButtonItem) {
         

@@ -20,7 +20,7 @@ class OTMap_Tasks: NSObject {
     }
 
 
-    func taskForUdacityPOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForPOST: @escaping (_ result:
+    func taskForUdacityPOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForUdacityPOST: @escaping (_ result:
         AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         var request = URLRequest(url: URL(string: method)!)
@@ -35,7 +35,7 @@ class OTMap_Tasks: NSObject {
             func sendError(_ error: String) {
                 
                 let userInfo = [NSLocalizedDescriptionKey: error]
-                completionHandlerForPOST(nil, NSError(domain: "TaskForPost", code: 1, userInfo: userInfo))
+                completionHandlerForUdacityPOST(nil, NSError(domain: "TaskForPost", code: 1, userInfo: userInfo))
                  print("return error = ",error)
             }
             
@@ -70,7 +70,7 @@ class OTMap_Tasks: NSObject {
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range) /* subset response data! */
 
-            self.convertDataWithCompletionHandler(newData,completionHandlerForConvertData: completionHandlerForPOST)
+            self.convertDataWithCompletionHandler(newData,completionHandlerForConvertData: completionHandlerForUdacityPOST)
         }
         
         task.resume()
@@ -78,18 +78,17 @@ class OTMap_Tasks: NSObject {
         }
     
     
-    func taskForParsePOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForPOST: @escaping (_ result:
-        AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    func taskForParsePOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForParsePOST: @escaping (_ result:
+        Bool, _ error: NSError?) -> Void) -> URLSessionDataTask {
+       
         
-        var request = URLRequest(url: URL(string: method)!)
-        print("URL request",request)
-        
-        request.httpMethod = "POST"
-        request.addValue(OTMap_Tasks.Constants.ApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = jsonBody.data(using: String.Encoding.utf8)
+        var  request = URLRequest(url: URL(string:method)!)
+            request.httpMethod = "POST"
+            request.addValue(OTMap_Tasks.Constants.ApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+            request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = jsonBody.data(using: String.Encoding.utf8)
         
         
         
@@ -98,7 +97,7 @@ class OTMap_Tasks: NSObject {
             func sendError(_ error: String) {
                 
                 let userInfo = [NSLocalizedDescriptionKey: error]
-                completionHandlerForPOST(nil, NSError(domain: "TaskForPost", code: 1, userInfo: userInfo))
+                completionHandlerForParsePOST(false, NSError(domain: "TaskForPost", code: 1, userInfo: userInfo))
                 print("return error = ",error)
             }
             
@@ -112,22 +111,19 @@ class OTMap_Tasks: NSObject {
                 //parse account errors: valid account vs. bad authentication
                 let responseValue = (response as? HTTPURLResponse)?.statusCode
                 if let responseValue = responseValue {
-                   print(responseValue)
+                   print("parse post response",responseValue)
                 }
                 
                 return
             }
             
-            guard let data = data else {
-                sendError("no data was returned by the request")
-                return
-            }
+            completionHandlerForParsePOST(true, nil)
             
             //if let data = data {
-            let range = Range(5..<data.count)
-            let newData = data.subdata(in: range) /* subset response data! */
+           // let range = Range(5..<data.count)
+            //let newData = data.subdata(in: range) /* subset response data! */
             
-            self.convertDataWithCompletionHandler(newData,completionHandlerForConvertData: completionHandlerForPOST)
+            //self.convertDataWithCompletionHandler(newData,completionHandlerForConvertData: completionHandlerForParsePOST)
         }
         
         task.resume()

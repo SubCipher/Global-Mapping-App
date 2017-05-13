@@ -15,11 +15,15 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
+          }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        studentListTableView.reloadData()
+        OTMap_Tasks.sharedInstance().loadStudentLocations(completionHandlerForLocations: { (success,errorString) in
+            self.studentListTableView.reloadData()
+        }
+            
+        )
     }
     
     // MARK: - Table view data source
@@ -61,7 +65,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
         print("row selected")
         let app = UIApplication.shared
         let goToWeb = StudentInformationArray[indexPath.row].mediaURL
@@ -69,16 +72,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         let defaultWebSite = (URL(string: "http://udacity.com")!)
         app.open(URL(string: goToWeb) ?? defaultWebSite)
         
-        
     }
     
-    
-//    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let detailController = self.storyboard!.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController
-//        
-//        detailController.imageFromCollection = true
-//        detailController.meme = appDelegate.memes2[indexPath.row]
-//        
-//        self.navigationController!.pushViewController(detailController, animated: true)
-//    }
 }

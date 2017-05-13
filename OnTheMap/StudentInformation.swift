@@ -14,6 +14,13 @@ import UIKit
 var StudentInformationArray = [StudentInformation]()
 
 
+
+//http://www.thomashanning.com/sorting-arrays-swift/
+
+
+
+
+
 struct StudentInformation {
     
     init(_ dictionary: [String:AnyObject]) {

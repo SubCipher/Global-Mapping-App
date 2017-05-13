@@ -39,10 +39,11 @@ extension OTMap_Tasks {
             }
         }
     }
+    //MARK: - get JSON data from server, ini structs and load each instance into data model (StudentInformationArray)
     
     func loadStudentLocations(completionHandlerForLocations: @escaping (_ success: Bool,_ errorString: NSError?) -> Void) {
     
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation"
+        let urlString = OTMap_Tasks.Constants.PostURL
         
         //the fully formed network request
         let request = NSMutableURLRequest(url: URL(string:urlString)!)
@@ -63,22 +64,32 @@ extension OTMap_Tasks {
                     for studentInfo in results {
                         let  newRecord = StudentInformation(studentInfo)
                         var objectIDArray = [String]()
+                        
+                        //load all records after the first one; here we check for dupes
                         if StudentInformationArray.count > 0 {
+                           
+                            print("append data to array..starting with \(StudentInformationArray.count) records")
                             
                             //create array of objectIDs to check for dupes, so we only add new IDs found during download
                             for existingID in StudentInformationArray {
                                 objectIDArray.append(existingID.objectId)
                             }
+                            
                             if objectIDArray.contains(newRecord.objectId) {
+                                
                             }  else {
                                 self.appendToStudentLocationArray(newRecord)
                             }
                         } else {
+                            //load first record without checking; no real chance of having a dupe
                             self.appendToStudentLocationArray(newRecord)
+                            print("load records starting from 0")
                         }
+                    
                     }
+                    
                     completionHandlerForLocations(true,nil)
-                    // self.studentLocations = results as [String : AnyObject]?
+                    
                 } else {
                     completionHandlerForLocations(false,NSError(domain: "JSONResults", code: 1, userInfo: [NSLocalizedDescriptionKey:" could not get JSON data results"]))
                 }
@@ -86,27 +97,66 @@ extension OTMap_Tasks {
         }
     }
     
-    //MARK: - apend records to arry
+    func studentLocationsSortedByDate(_ arrayOfLocations:[StudentInformation])-> [StudentInformation] {
+        
+       return []
+    }
+    
+    
+    
+    //MARK: - Logout Method
+    func udacityLogoutMethod(completionHandlerForLogout: @escaping ( _ success:Bool, _ error: NSError?) ->Void) {
+        
+     
+        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+        request.httpMethod = "DELETE"
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            
+            if error != nil {
+                completionHandlerForLogout(false,NSError(domain: "SessionLogout", code: 1, userInfo: [NSLocalizedDescriptionKey: "Erorr while loging out"]))
+                return
+            }
+            completionHandlerForLogout(true,nil)
+                   }
+        task.resume()
+    }
+
+    
+        
+    
+    //MARK: - append records to arry
     func appendToStudentLocationArray(_ addRecord: StudentInformation){
         StudentInformationArray.append(addRecord)
+    
     }
     
     //MARK: - post new location (parse api)
+    
     func postNewLocation(_ mediaURL:String,_ coordinate: CLLocationCoordinate2D, _ address:String, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
         
-        let  mutableMethod = "https://parse.udacity.om/parse/classes/StudentLocation"
+        let  mutableMethod = OTMap_Tasks.Constants.PostURL
         
-        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart04\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
+        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart11a\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
         
-        let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) { response, error in
+        let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) {success, error in
             
-            if let error = error {
+            if error != nil {
                 
                 completionHandlerForPostNewLocation(false, error)
             } else {
                 completionHandlerForPostNewLocation(true, nil)
             }
-        
         }
     }
 }

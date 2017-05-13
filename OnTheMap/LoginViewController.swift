@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     //option to check for single host: => var reachability = OTMap_NetworkReachability(hostName: "https://udacity.com")
     //check for an open connection to the internet
     var reachability: OTMap_NetworkReachability? = OTMap_NetworkReachability.networkReachabilityForInternetConnection()
-    
+    //NOTE: signup button is implemented as a triggered segue action in storyBoard
     @IBOutlet weak var userAccountTextField: UITextField!
     @IBOutlet weak var userPwdTextField: UITextField!
     
@@ -66,48 +66,39 @@ class LoginViewController: UIViewController {
            //add action to main queue
             performUpdatesOnMainQueue {
                 if success {
-                    self.completeLogin()
+                   self.completeLogin()
                 } else {
-                    if self.presentedViewController != nil {
-                        //surpress warning message in console
-                        return
-                    }
-                    else {
+                         //MARK: failed login alert
                         let actionSheet = UIAlertController(title: "ERROR", message: errorString?.localizedDescription, preferredStyle: .alert)
                         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                         self.present(actionSheet,animated: true, completion: nil)
-                    }
                 }
             }
         }
     }
-    
     func completeLogin(){
     
         let controller = storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
         present(controller, animated: true, completion: nil)
     }
-    
-    //direct user to a signUP screen
-    @IBAction func signUP(_ sender: UIButton) {
-        
-    }
 }
 
 extension LoginViewController {
     
-    //network reachability
+    //MARK: - network reachability
     
     func checkReachability() {
         guard let networkState = reachability else { return }
         
         if networkState.isReachable {
+            //this is the mini-view on lower left of main view used to indicate network status: green = found connection / red = no connection
             connectionStatus.backgroundColor = UIColor.init(red: 0.0, green: 1.0, blue: 0.0, alpha: 0.5)
             } else {
             //change background color to light red to indicate connection failure
             connectionStatus.backgroundColor = UIColor.init(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.5)
-            
+            //MARK: failed connection alert
             let actionSheet = UIAlertController(title: "NETWORK ERROR", message: "Your Internet Connection Cannot Be Detected", preferredStyle: .alert)
+            
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actionSheet,animated: true, completion: nil)
             

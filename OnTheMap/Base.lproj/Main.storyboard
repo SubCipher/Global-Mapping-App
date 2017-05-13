@@ -103,7 +103,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SignUP"/>
                                 <connections>
-                                    <action selector="signUP:" destination="2tk-xZ-iT7" eventType="touchUpInside" id="Oxe-ic-6Gt"/>
                                     <segue destination="Wnh-PT-Ubu" kind="show" id="Ali-lZ-YZn"/>
                                 </connections>
                             </button>

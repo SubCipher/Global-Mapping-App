@@ -26,11 +26,9 @@ class WebViewViewController: UIViewController {
             
             let udacityURL = URL(string: "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated")
             let udacityURLRequest = URLRequest(url: udacityURL!)
-            
           
             udacityWebview.loadRequest(udacityURLRequest)
 
-        
             }
     
     

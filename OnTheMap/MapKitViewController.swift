@@ -39,18 +39,16 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
                         annotation.title = "\(first) \(last)"
                         annotation.subtitle = medidaURL
                         
-                        if annotations .contains(annotation) {
-                            print("already added")
+                        if annotations.contains(annotation) {
                         } else {
                             annotations.append(annotation)
-
                         }
                                            }
                     self.mapView.addAnnotations(annotations)
                 }
 
             } else {
-                
+                //MARK: failed download alert
                 let actionSheet = UIAlertController(title: "Error Downloading", message: errorString?.localizedDescription, preferredStyle: .alert)
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(actionSheet,animated: true,completion: nil)
@@ -85,7 +83,8 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
             if let toOpen = view.annotation?.subtitle! {
-                app.open(URL(string: toOpen)!)
+                //dont crash if location is missing link, use a default site
+                app.open(URL(string: toOpen) ?? (URL(string: "http://udacity.com")!))
             }
         }
     }
