@@ -14,7 +14,6 @@ import UIKit
 var StudentInformationArray = [StudentInformation]()
 
 
-
 //http://www.thomashanning.com/sorting-arrays-swift/
 
 

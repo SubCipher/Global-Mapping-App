@@ -19,7 +19,7 @@ class OTMap_Tasks: NSObject {
     super.init()
     }
 
-
+    //MARK: - UdacityPostMethod
     func taskForUdacityPOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForUdacityPOST: @escaping (_ result:
         AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
@@ -77,7 +77,7 @@ class OTMap_Tasks: NSObject {
         return task
         }
     
-    
+    //MARK:- Parse Post Method
     func taskForParsePOSTMethod(_ method: String,_ jsonBody: String, completionHandlerForParsePOST: @escaping (_ result:
         Bool, _ error: NSError?) -> Void) -> URLSessionDataTask {
        
@@ -119,12 +119,7 @@ class OTMap_Tasks: NSObject {
             
             completionHandlerForParsePOST(true, nil)
             
-            //if let data = data {
-           // let range = Range(5..<data.count)
-            //let newData = data.subdata(in: range) /* subset response data! */
-            
-            //self.convertDataWithCompletionHandler(newData,completionHandlerForConvertData: completionHandlerForParsePOST)
-        }
+       }
         
         task.resume()
         return task
@@ -139,7 +134,7 @@ class OTMap_Tasks: NSObject {
     
     
     
-    
+    //Mark: Udacity Get Method
     func taskForGET( _ request :URLRequest, completionHandlerForGET: @escaping (_ result:AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in

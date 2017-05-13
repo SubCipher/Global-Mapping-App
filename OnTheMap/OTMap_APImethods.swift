@@ -76,7 +76,7 @@ extension OTMap_Tasks {
                             }
                             
                             if objectIDArray.contains(newRecord.objectId) {
-                                
+                                //nothing to do
                             }  else {
                                 self.appendToStudentLocationArray(newRecord)
                             }
@@ -87,7 +87,7 @@ extension OTMap_Tasks {
                         }
                     
                     }
-                    
+                    print("StudentLocationsArray = ", StudentInformationArray)
                     completionHandlerForLocations(true,nil)
                     
                 } else {
@@ -97,9 +97,54 @@ extension OTMap_Tasks {
         }
     }
     
-    func studentLocationsSortedByDate(_ arrayOfLocations:[StudentInformation])-> [StudentInformation] {
+    
+    //MARK: - append records to arry
+    func appendToStudentLocationArray(_ addRecord: StudentInformation){
+        StudentInformationArray.append(addRecord)
         
-       return []
+    }
+    
+    //MARK: - post new location (parse api)
+    
+    func postNewLocation(_ mediaURL:String,_ coordinate: CLLocationCoordinate2D, _ address:String, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
+        
+        let  mutableMethod = OTMap_Tasks.Constants.PostURL
+        
+        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart12b\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
+        
+        let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) {success, error in
+            
+            if error != nil {
+                
+                completionHandlerForPostNewLocation(false, error)
+            } else {
+                let someSortedArray = self.studentLocationsSortedByDate(StudentInformationArray)
+                print("this sorted array",someSortedArray)
+                completionHandlerForPostNewLocation(true, nil)
+               
+
+            }
+        }
+    }
+    
+    //MARK: - sort array by date
+    func studentLocationsSortedByDate(_ sortedArrayOfLocations:[StudentInformation])-> [StudentInformation] {
+        
+        //http://www.thomashanning.com/sorting-arrays-swift/
+        
+      _ = sortedArrayOfLocations.sorted { (date1, date2) -> Bool in
+           // return date1.compare(date2) == ComparisonResult.orderedAscending
+        return date1.createdAt.compare(date2.createdAt)  == ComparisonResult.orderedAscending
+
+        }
+        
+        for date in sortedArrayOfLocations {
+          print(date.createdAt, date.firstName, date.lastName)
+        }
+
+        
+        StudentInformationArray = sortedArrayOfLocations
+       return sortedArrayOfLocations
     }
     
     
@@ -134,29 +179,4 @@ extension OTMap_Tasks {
 
     
         
-    
-    //MARK: - append records to arry
-    func appendToStudentLocationArray(_ addRecord: StudentInformation){
-        StudentInformationArray.append(addRecord)
-    
-    }
-    
-    //MARK: - post new location (parse api)
-    
-    func postNewLocation(_ mediaURL:String,_ coordinate: CLLocationCoordinate2D, _ address:String, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
-        
-        let  mutableMethod = OTMap_Tasks.Constants.PostURL
-        
-        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart11a\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
-        
-        let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) {success, error in
-            
-            if error != nil {
-                
-                completionHandlerForPostNewLocation(false, error)
-            } else {
-                completionHandlerForPostNewLocation(true, nil)
-            }
-        }
-    }
-}
+   }

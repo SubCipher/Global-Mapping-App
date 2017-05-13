@@ -19,18 +19,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        OTMap_Tasks.sharedInstance().loadStudentLocations(completionHandlerForLocations: { (success,errorString) in
-            self.studentListTableView.reloadData()
-        }
-            
-        )
-    }
+          }
     
     // MARK: - Table view data source
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(StudentInformationArray.count)
-        return StudentInformationArray.count
+               return StudentInformationArray.count
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -65,7 +59,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        print("row selected")
+        print("row selected = ",indexPath.row)
         let app = UIApplication.shared
         let goToWeb = StudentInformationArray[indexPath.row].mediaURL
         //use default website to prevent fail if no URL is assigned to location

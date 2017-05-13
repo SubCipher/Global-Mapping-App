@@ -23,7 +23,7 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
             performUpdatesOnMainQueue {
                 
                     var annotations = [MKPointAnnotation]()
-                    
+                                       
                     for student in StudentInformationArray {
                         
                         let lat = CLLocationDegrees(student.latitude)
