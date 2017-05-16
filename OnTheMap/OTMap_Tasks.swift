@@ -82,15 +82,13 @@ class OTMap_Tasks: NSObject {
         Bool, _ error: NSError?) -> Void) -> URLSessionDataTask {
        
         
-        var  request = URLRequest(url: URL(string:method)!)
+        var request = URLRequest(url: URL(string:method)!)
             request.httpMethod = "POST"
             request.addValue(OTMap_Tasks.Constants.ApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
             request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
             
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = jsonBody.data(using: String.Encoding.utf8)
-        
-        
         
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
             
@@ -118,21 +116,11 @@ class OTMap_Tasks: NSObject {
             }
             
             completionHandlerForParsePOST(true, nil)
-            
        }
         
         task.resume()
         return task
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
     
     //Mark: Udacity Get Method
     func taskForGET( _ request :URLRequest, completionHandlerForGET: @escaping (_ result:AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {

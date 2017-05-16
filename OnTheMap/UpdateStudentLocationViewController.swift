@@ -32,8 +32,7 @@ class UpdateStudentLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(updateStudentAtLocation)
-        
+               
         objectID.text = updateStudentAtLocation.objectId
         updatedAt.text = updateStudentAtLocation.updatedAt
         uniqueKey.text = "\(updateStudentAtLocation.uniqueKey)"

@@ -13,13 +13,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     @IBOutlet weak var studentListTableView: UITableView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-          }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-          }
     
     // MARK: - Table view data source
     
@@ -38,11 +31,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
         return cell
     }
-    //delete on swipe
-    
     internal func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-       
-        print("student location",StudentInformationArray[indexPath.row])
+            
         let updateViewController = self.storyboard!.instantiateViewController(withIdentifier: "UpdateStudentLocationViewController") as! UpdateStudentLocationViewController
         
         updateViewController.updateStudentAtLocation = StudentInformationArray[indexPath.row]
@@ -59,7 +49,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        print("row selected = ",indexPath.row)
         let app = UIApplication.shared
         let goToWeb = StudentInformationArray[indexPath.row].mediaURL
         //use default website to prevent fail if no URL is assigned to location

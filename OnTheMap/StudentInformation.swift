@@ -13,6 +13,7 @@ import UIKit
 
 var StudentInformationArray = [StudentInformation]()
 
+var objectIDArray = [String]()
 
 //http://www.thomashanning.com/sorting-arrays-swift/
 

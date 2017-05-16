@@ -11,9 +11,9 @@ import CoreLocation
 
 extension OTMap_Tasks {
     
-  
+    
     func udacityPostForLogin(_ username:String, _ pwd: String,
-                           _ completionHandlerForLogin: @escaping ( _ success:Bool , _ error: NSError?) -> Void)  {
+                             _ completionHandlerForLogin: @escaping ( _ success:Bool , _ error: NSError?) -> Void)  {
         
         /*1. specify the parameters */
         
@@ -26,13 +26,13 @@ extension OTMap_Tasks {
         
         let _ = taskForUdacityPOSTMethod( mutableMethod, jsonBody) { (results, error) in
             
-        //*3. send values to competion handler */
+            //*3. send values to competion handler */
             if let error = error {
                 completionHandlerForLogin(false, error)
             } else {
                 if let session = results?[OTMap_Tasks.JSONResponseKeys.SessionID] as? [String:AnyObject] {
                     self.sessionID = session
-                            completionHandlerForLogin(true,nil)
+                    completionHandlerForLogin(true,nil)
                 } else {
                     completionHandlerForLogin(false, NSError(domain: "line near 54 APIMethods user login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account0"]))
                 }
@@ -42,7 +42,7 @@ extension OTMap_Tasks {
     //MARK: - get JSON data from server, ini structs and load each instance into data model (StudentInformationArray)
     
     func loadStudentLocations(completionHandlerForLocations: @escaping (_ success: Bool,_ errorString: NSError?) -> Void) {
-    
+        
         let urlString = OTMap_Tasks.Constants.PostURL
         
         //the fully formed network request
@@ -52,6 +52,7 @@ extension OTMap_Tasks {
         request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
         
         //active call to server
+         
         let _ = taskForGET(request as URLRequest) { ( response, error ) in
             
             if error != nil {
@@ -60,36 +61,16 @@ extension OTMap_Tasks {
                 
             } else {
                 if let results = response?[OTMap_Tasks.JSONResponseKeys.Results] as? [[String:AnyObject]] {
-                    
+                   
                     for studentInfo in results {
-                        let  newRecord = StudentInformation(studentInfo)
-                        var objectIDArray = [String]()
                         
-                        //load all records after the first one; here we check for dupes
-                        if StudentInformationArray.count > 0 {
-                           
-                            print("append data to array..starting with \(StudentInformationArray.count) records")
-                            
-                            //create array of objectIDs to check for dupes, so we only add new IDs found during download
-                            for existingID in StudentInformationArray {
-                                objectIDArray.append(existingID.objectId)
-                            }
-                            
-                            if objectIDArray.contains(newRecord.objectId) {
-                                //nothing to do
-                            }  else {
-                                self.appendToStudentLocationArray(newRecord)
-                            }
-                        } else {
-                            //load first record without checking; no real chance of having a dupe
-                            self.appendToStudentLocationArray(newRecord)
-                            print("load records starting from 0")
+                        let  newRecord = StudentInformation(studentInfo)
+                        if !objectIDArray.contains(newRecord.objectId){
+                             self.appendToStudentLocationArray(newRecord)
+                            objectIDArray.append(newRecord.objectId)
                         }
-                    
                     }
-                    print("StudentLocationsArray = ", StudentInformationArray)
                     completionHandlerForLocations(true,nil)
-                    
                 } else {
                     completionHandlerForLocations(false,NSError(domain: "JSONResults", code: 1, userInfo: [NSLocalizedDescriptionKey:" could not get JSON data results"]))
                 }
@@ -98,10 +79,15 @@ extension OTMap_Tasks {
     }
     
     
-    //MARK: - append records to arry
+    //MARK: - append records to array
     func appendToStudentLocationArray(_ addRecord: StudentInformation){
-        StudentInformationArray.append(addRecord)
-        
+        if StudentInformationArray.count < 100 {
+            
+            StudentInformationArray.append(addRecord)
+        } else {
+            StudentInformationArray.insert(addRecord, at: 0)
+
+        }
     }
     
     //MARK: - post new location (parse api)
@@ -110,7 +96,7 @@ extension OTMap_Tasks {
         
         let  mutableMethod = OTMap_Tasks.Constants.PostURL
         
-        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart12b\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
+        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart14b\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
         
         let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) {success, error in
             
@@ -118,41 +104,16 @@ extension OTMap_Tasks {
                 
                 completionHandlerForPostNewLocation(false, error)
             } else {
-                let someSortedArray = self.studentLocationsSortedByDate(StudentInformationArray)
-                print("this sorted array",someSortedArray)
+        
                 completionHandlerForPostNewLocation(true, nil)
-               
-
             }
         }
-    }
-    
-    //MARK: - sort array by date
-    func studentLocationsSortedByDate(_ sortedArrayOfLocations:[StudentInformation])-> [StudentInformation] {
-        
-        //http://www.thomashanning.com/sorting-arrays-swift/
-        
-      _ = sortedArrayOfLocations.sorted { (date1, date2) -> Bool in
-           // return date1.compare(date2) == ComparisonResult.orderedAscending
-        return date1.createdAt.compare(date2.createdAt)  == ComparisonResult.orderedAscending
-
-        }
-        
-        for date in sortedArrayOfLocations {
-          print(date.createdAt, date.firstName, date.lastName)
-        }
-
-        
-        StudentInformationArray = sortedArrayOfLocations
-       return sortedArrayOfLocations
-    }
-    
-    
+    }    
     
     //MARK: - Logout Method
     func udacityLogoutMethod(completionHandlerForLogout: @escaping ( _ success:Bool, _ error: NSError?) ->Void) {
         
-     
+        
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "DELETE"
         var xsrfCookie: HTTPCookie? = nil
@@ -173,10 +134,10 @@ extension OTMap_Tasks {
                 return
             }
             completionHandlerForLogout(true,nil)
-                   }
+        }
         task.resume()
     }
-
     
-        
-   }
+    
+    
+}

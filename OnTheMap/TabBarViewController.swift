@@ -10,12 +10,6 @@ import UIKit
 
 class TabBarViewController: UITabBarController {
 
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
     @IBAction func logoutBarItem(_ sender: UIBarButtonItem) {
      
          OTMap_Tasks().udacityLogoutMethod() {(success, errorString) in

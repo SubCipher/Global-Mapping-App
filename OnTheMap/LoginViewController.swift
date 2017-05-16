@@ -28,7 +28,7 @@ class LoginViewController: UIViewController {
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        //check network reachability
+        
         checkReachability()
         
         //set notificationCenter for changes in network state
@@ -63,7 +63,7 @@ class LoginViewController: UIViewController {
         //userPwdText = userPwdTextField.text
         
         OTMap_Tasks.sharedInstance().udacityPostForLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
-           //add action to main queue
+         
             performUpdatesOnMainQueue {
                 if success {
                    self.completeLogin()
@@ -102,7 +102,7 @@ extension LoginViewController {
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actionSheet,animated: true, completion: nil)
             
-            print("no network connection found")
+            
         }
     }
     

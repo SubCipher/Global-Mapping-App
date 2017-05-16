@@ -19,18 +19,12 @@ class WebViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let udacityURL = URL(string: "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated")
+        let udacityURLRequest = URLRequest(url: udacityURL!)
+        
+        udacityWebview.loadRequest(udacityURLRequest)
+        
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            
-            let udacityURL = URL(string: "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated")
-            let udacityURLRequest = URLRequest(url: udacityURL!)
-          
-            udacityWebview.loadRequest(udacityURLRequest)
-
-            }
-    
     
     @IBAction func cancelLogin(_ sender: UIBarButtonItem) {
        self.dismiss(animated: true, completion: nil) 

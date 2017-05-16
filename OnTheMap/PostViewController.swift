@@ -76,29 +76,18 @@ class PostViewController: UIViewController {
                 //display coordinates on view screen
                 locationLabel.text = "\(coordinate!.latitude) " + "\(coordinate!.longitude)"
                 
-                //send required parameters, with the string for URL defaulted to udacity.com
-                
-                
-                
-                
                 OTMap_Tasks().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate!,address) {(success,error) in
                 
-                    
-                    
-            performUpdatesOnMainQueue {
-                print("success,error",success,error ?? 0)
+                performUpdatesOnMainQueue {
+                
                 if success == false{
-                    
-                    print("false")
                     
                     let actionSheet = UIAlertController(title: "ERROR", message: "record update failed to post", preferredStyle: .alert)
                     actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     self.present(actionSheet,animated: true, completion: nil)
                     } else {
-                        print("success result =",success)
-                       //self.dismiss(animated: true, completion: nil)
                     
-                      let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
+                        let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
                       self.present(controller, animated: true, completion: nil)
 
                     }
