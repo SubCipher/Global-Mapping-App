@@ -9,29 +9,23 @@
 import UIKit
 
 class TabBarViewController: UITabBarController {
-
+    
     @IBAction func logoutBarItem(_ sender: UIBarButtonItem) {
-     
-         OTMap_Tasks().udacityLogoutMethod() {(success, errorString) in
+        
+        OTMap_Tasks().udacityLogoutMethod() {(success, errorString) in
+            
             if success {
-                
-                self.dismiss(animated: true, completion: nil)
-                //works without this but VC is slow to dismiss and slow to present new
-                let controller = self.storyboard!.instantiateViewController(withIdentifier: "LoginViewController")
-                self.present(controller, animated: true, completion: nil)
-                
+                performUpdatesOnMainQueue {
+                    self.dismiss(animated: true, completion: nil)
+                    }
             } else {
-                
+               
                 let actionSheet = UIAlertController(title: "Error During Logout", message: errorString?.localizedDescription, preferredStyle: .alert)
+                
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(actionSheet,animated: true,completion: nil)
-
             }
         }
         
     }
-
-    
-    
-       
 }

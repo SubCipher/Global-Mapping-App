@@ -9,38 +9,46 @@
 import UIKit
 
 class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    
     
     @IBOutlet weak var studentListTableView: UITableView!
     
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        studentListTableView.estimatedRowHeight = studentListTableView.rowHeight
+        studentListTableView.rowHeight = UITableViewAutomaticDimension
+    }
+    
     // MARK: - Table view data source
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-               return StudentInformationArray.count
+        return StudentInformationArray.count
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell")!
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OTMap_TableViewCell", for: indexPath)
         let singleCell = StudentInformationArray[indexPath.row]
         
+        if let customCell = cell as? OTMap_TableViewCell {
+            customCell.studentLocation = singleCell
+        }
         
-        cell.textLabel?.text =  "\( singleCell.firstName )"  +  "\( singleCell.lastName )"
-        cell.detailTextLabel?.text = "\(singleCell.mediaURL)"
-    
         return cell
     }
+    
     internal func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-            
-        let updateViewController = self.storyboard!.instantiateViewController(withIdentifier: "UpdateStudentLocationViewController") as! UpdateStudentLocationViewController
         
-        updateViewController.updateStudentAtLocation = StudentInformationArray[indexPath.row]
-        self.navigationController!.pushViewController(updateViewController, animated: true)
+        let showViewController = self.storyboard!.instantiateViewController(withIdentifier: "UpdateStudentLocationViewController") as! ShowStudentLocationViewController
+        
+        showViewController.showStudentAtLocation = StudentInformationArray[indexPath.row]
+        self.navigationController!.pushViewController(showViewController, animated: true)
     }
     
     internal func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            
             // Delete the row from the data source
             StudentInformationArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -51,10 +59,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let app = UIApplication.shared
         let goToWeb = StudentInformationArray[indexPath.row].mediaURL
+        
         //use default website to prevent fail if no URL is assigned to location
         let defaultWebSite = (URL(string: "http://udacity.com")!)
         app.open(URL(string: goToWeb) ?? defaultWebSite)
-        
     }
-    
 }

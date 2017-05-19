@@ -132,7 +132,7 @@ class OTMap_NetworkReachability: NSObject {
     var currentReachabilityStatus: ReachabilityStatus {
         if flags.contains(.reachable) == false {
             //The target host is not reachable.
-           
+            
             return .notReachable
         }
         else if flags.contains(.isWWAN) == true {

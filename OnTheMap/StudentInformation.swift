@@ -11,15 +11,11 @@ import UIKit
 
 //On the map data model
 
+
+
 var StudentInformationArray = [StudentInformation]()
 
 var objectIDArray = [String]()
-
-//http://www.thomashanning.com/sorting-arrays-swift/
-
-
-
-
 
 struct StudentInformation {
     

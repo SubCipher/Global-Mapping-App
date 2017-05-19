@@ -20,6 +20,7 @@ extension OTMap_Tasks {
         static let ApiPath = "/parse"
         static let AuthorizationURL = "https://www.udacity.com/api/session"
         static let PostURL = "https://parse.udacity.com/parse/classes/StudentLocation"
+        static let SignUpURL = "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated"
     }
       struct JSONResponseKeys {
         //MARK: General
@@ -32,6 +33,4 @@ extension OTMap_Tasks {
     struct DefaultURL {
         static let standInURL = "http://www.udacity.com"
     }
-    
-    
 }

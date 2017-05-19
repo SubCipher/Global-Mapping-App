@@ -20,10 +20,10 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
             
             if success {
                 
-            performUpdatesOnMainQueue {
-                
+                performUpdatesOnMainQueue {
+                    
                     var annotations = [MKPointAnnotation]()
-                                       
+                    
                     for student in StudentInformationArray {
                         
                         let lat = CLLocationDegrees(student.latitude)
@@ -43,19 +43,19 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
                         } else {
                             annotations.append(annotation)
                         }
-                                           }
+                    }
                     self.mapView.addAnnotations(annotations)
                 }
-
+                
             } else {
-                //MARK: failed download alert
+                //failed download alert
                 let actionSheet = UIAlertController(title: "Error Downloading", message: errorString?.localizedDescription, preferredStyle: .alert)
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(actionSheet,animated: true,completion: nil)
             }
         })
     }
-
+    
     
     //MARK: - MKMapViewDelegate
     
@@ -86,4 +86,3 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
         }
     }
 }
-

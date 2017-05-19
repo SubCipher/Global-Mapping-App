@@ -34,7 +34,7 @@ extension OTMap_Tasks {
                     self.sessionID = session
                     completionHandlerForLogin(true,nil)
                 } else {
-                    completionHandlerForLogin(false, NSError(domain: "line near 54 APIMethods user login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account0"]))
+                    completionHandlerForLogin(false, NSError(domain: "Bad login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account"]))
                 }
             }
         }
@@ -52,7 +52,7 @@ extension OTMap_Tasks {
         request.addValue(OTMap_Tasks.Constants.RESTapi, forHTTPHeaderField: "X-Parse-REST-API-Key")
         
         //active call to server
-         
+        
         let _ = taskForGET(request as URLRequest) { ( response, error ) in
             
             if error != nil {
@@ -61,17 +61,19 @@ extension OTMap_Tasks {
                 
             } else {
                 if let results = response?[OTMap_Tasks.JSONResponseKeys.Results] as? [[String:AnyObject]] {
-                   
+                    
                     for studentInfo in results {
                         
                         let  newRecord = StudentInformation(studentInfo)
+                        
                         if !objectIDArray.contains(newRecord.objectId){
-                             self.appendToStudentLocationArray(newRecord)
+                            self.appendToStudentLocationArray(newRecord)
                             objectIDArray.append(newRecord.objectId)
                         }
                     }
                     completionHandlerForLocations(true,nil)
                 } else {
+                    
                     completionHandlerForLocations(false,NSError(domain: "JSONResults", code: 1, userInfo: [NSLocalizedDescriptionKey:" could not get JSON data results"]))
                 }
             }
@@ -81,12 +83,12 @@ extension OTMap_Tasks {
     
     //MARK: - append records to array
     func appendToStudentLocationArray(_ addRecord: StudentInformation){
-        if StudentInformationArray.count < 100 {
+        if StudentInformationArray.count < locationsToRetrieve {
             
             StudentInformationArray.append(addRecord)
         } else {
             StudentInformationArray.insert(addRecord, at: 0)
-
+            
         }
     }
     
@@ -104,17 +106,16 @@ extension OTMap_Tasks {
                 
                 completionHandlerForPostNewLocation(false, error)
             } else {
-        
+                
                 completionHandlerForPostNewLocation(true, nil)
             }
         }
-    }    
+    }
     
     //MARK: - Logout Method
     func udacityLogoutMethod(completionHandlerForLogout: @escaping ( _ success:Bool, _ error: NSError?) ->Void) {
         
-        
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+        let request = NSMutableURLRequest(url: URL(string: OTMap_Tasks.Constants.AuthorizationURL)!)
         request.httpMethod = "DELETE"
         var xsrfCookie: HTTPCookie? = nil
         let sharedCookieStorage = HTTPCookieStorage.shared
@@ -137,7 +138,4 @@ extension OTMap_Tasks {
         }
         task.resume()
     }
-    
-    
-    
 }

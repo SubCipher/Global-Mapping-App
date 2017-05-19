@@ -11,7 +11,7 @@ import UIKit
 class WebViewViewController: UIViewController {
     
     var urlRequest: URLRequest? = nil
-   
+    
     var completionHandlerForView: ((_ success: Bool, _ errorString: String?) -> Void)? = nil
     
     @IBOutlet weak var udacityWebview: UIWebView!
@@ -19,18 +19,13 @@ class WebViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let udacityURL = URL(string: "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated")
+        let udacityURL = URL(string: OTMap_Tasks.Constants.SignUpURL)
         let udacityURLRequest = URLRequest(url: udacityURL!)
         
         udacityWebview.loadRequest(udacityURLRequest)
-        
     }
     
     @IBAction func cancelLogin(_ sender: UIBarButtonItem) {
-       self.dismiss(animated: true, completion: nil) 
+        self.dismiss(animated: true, completion: nil)
     }
-    
-    
-
-    
 }
