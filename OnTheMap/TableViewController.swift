@@ -28,10 +28,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OTMap_TableViewCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
         let singleCell = StudentInformationArray[indexPath.row]
         
-        if let customCell = cell as? OTMap_TableViewCell {
+        if let customCell = cell as? TableViewCell {
             customCell.studentLocation = singleCell
         }
         

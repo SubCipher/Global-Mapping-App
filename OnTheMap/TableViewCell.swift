@@ -1,5 +1,5 @@
 //
-//  OTMap_TableViewCell.swift
+//  TableViewCell.swift
 //  OnTheMap
 //
 //  Created by knax on 5/18/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OTMap_TableViewCell: UITableViewCell {
+class TableViewCell: UITableViewCell {
 
     @IBOutlet weak var studentNameLabel: UILabel!
     @IBOutlet weak var webSiteLinks: UILabel!
