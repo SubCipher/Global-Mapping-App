@@ -19,7 +19,6 @@ extension OTMap_Tasks {
         
         let mutableMethod: String = Constants.AuthorizationURL
         
-        
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(pwd)\"}}"
         
         /*2. make the request */
@@ -64,11 +63,11 @@ extension OTMap_Tasks {
                     
                     for studentInfo in results {
                         
-                        let  newRecord = StudentInformation(studentInfo)
+                        let newRecord = StudentDataSource.StudentInformation(studentInfo)
                         
-                        if !objectIDArray.contains(newRecord.objectId){
+                        if !StudentDataSource.sharedInstance.objectIDArray.contains(newRecord.objectId){
                             self.appendToStudentLocationArray(newRecord)
-                            objectIDArray.append(newRecord.objectId)
+                            StudentDataSource.sharedInstance.objectIDArray.append(newRecord.objectId)
                         }
                     }
                     completionHandlerForLocations(true,nil)
@@ -80,25 +79,22 @@ extension OTMap_Tasks {
         }
     }
     
-    
     //MARK: - append records to array
-    func appendToStudentLocationArray(_ addRecord: StudentInformation){
-        if StudentInformationArray.count < locationsToRetrieve {
-            
-            StudentInformationArray.append(addRecord)
+    func appendToStudentLocationArray(_ addRecord: StudentDataSource.StudentInformation){
+        if StudentDataSource.sharedInstance.StudentData.count < locationsToRetrieve {
+            StudentDataSource.sharedInstance.StudentData.append(addRecord)
         } else {
-            StudentInformationArray.insert(addRecord, at: 0)
-            
+            StudentDataSource.sharedInstance.StudentData.insert(addRecord, at: 0)
         }
     }
     
     //MARK: - post new location (parse api)
     
-    func postNewLocation(_ mediaURL:String,_ coordinate: CLLocationCoordinate2D, _ address:String, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
+    func postNewLocation(_ postLocation: StudentDataSource.postUserInfo, completionHandlerForPostNewLocation: @escaping (_ success: Bool,_ error: NSError?) -> Void) {
         
         let  mutableMethod = OTMap_Tasks.Constants.PostURL
         
-        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"K\", \"lastName\": \"Picart14b\",\"mapString\": \"\(address)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(coordinate.latitude), \"longitude\": \(coordinate.longitude)}"
+        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"\(postLocation.firstName)\", \"lastName\": \"\(postLocation.lastName)\",\"mapString\": \"\(postLocation.mapString)\", \"mediaURL\": \"\(postLocation.mediaURL)\",\"latitude\": \(postLocation.latitude), \"longitude\": \(postLocation.longitude)}"
         
         let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) {success, error in
             

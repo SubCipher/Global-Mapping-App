@@ -51,7 +51,7 @@ class OTMap_Tasks: NSObject {
                 if let responseValue = responseValue {
                     if responseValue == 400 {
                         
-                        sendError("invailid user name or password")
+                        sendError("invalid user name or password")
                     } else if responseValue == 403 {
                         
                         sendError("bad user name or password")
@@ -166,4 +166,11 @@ class OTMap_Tasks: NSObject {
         }
         return Singleton.sharedInstance
     }
+    
+    func performUpdatesOnMainQueue(_ updates: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            updates()
+        }
+    }
+    
 }

@@ -11,7 +11,6 @@ import UIKit
 class WebViewViewController: UIViewController {
     
     var urlRequest: URLRequest? = nil
-    
     var completionHandlerForView: ((_ success: Bool, _ errorString: String?) -> Void)? = nil
     
     @IBOutlet weak var udacityWebview: UIWebView!

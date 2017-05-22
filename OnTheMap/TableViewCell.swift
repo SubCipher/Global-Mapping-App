@@ -13,7 +13,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var studentNameLabel: UILabel!
     @IBOutlet weak var webSiteLinks: UILabel!
     
-    var studentLocation: StudentInformation? {  didSet {updateUI() }}
+    var studentLocation: StudentDataSource.StudentInformation? {  didSet {updateUI() }}
     
     private func updateUI() {
         studentNameLabel?.text = "\(studentLocation?.firstName ?? "")" + "\(studentLocation?.lastName ?? "")"

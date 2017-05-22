@@ -8,95 +8,129 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
-class PostViewController: UIViewController {
+class PostViewController: UIViewController  {
     
     //geocode implementation based on tutorial from https://cocoacasts.com/forward-and-reverse-geocoding-with-clgeocoder-part-1/
+    @IBOutlet weak var miniMapKitView: MKMapView!
+    
+    @IBOutlet weak var firstNameTextField: UITextField!
+    @IBOutlet weak var lastNameTextField: UITextField!
     
     @IBOutlet weak var streetTextField: UITextField!
-    
     @IBOutlet weak var cityTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
     
     @IBOutlet weak var mediaURL: UITextField!
     
+    @IBOutlet weak var postLocationButton: UIButton!
     @IBOutlet weak var geocodeButton: UIButton!
+    
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var locationLabel: UILabel!
     
     lazy var geocoder = CLGeocoder()
+    var sendToPost: StudentDataSource.postUserInfo? = nil    
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicatorView.isHidden = true
+        postLocationButton.isHidden = true
     }
     
     @IBAction func geocodeAction(_ sender: UIButton) {
+        self.geocodeButton.isHidden = true
+        self.activityIndicatorView.isHidden = false
+        self.activityIndicatorView.startAnimating()
         
         guard let country = countryTextField.text else {return}
         guard let street = streetTextField.text else {return}
         guard let city = cityTextField.text else {return}
         
-        let address = "\(country) " + "\(city) " +  "\(street)"
+        let locationString = "\(country) " + "\(city) " +  "\(street)"
         
-        geocoder.geocodeAddressString(address) { (placemarks, error) in
+        geocoder.geocodeAddressString(locationString) { (placemarks, error) in
             
             self.activityIndicatorView.isHidden = true
-            self.postNewGeocodeLocation(address, withPlacemarks: placemarks,error: error)
+            self.geocodeButton.isHidden = false
+            self.activityIndicatorView.stopAnimating()
+            
+            if error != nil {
+                
+                let actionSheet = UIAlertController(title: "ERROR", message: "could not get address, pls check your entry", preferredStyle: .alert)
+                
+                actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(actionSheet,animated: true, completion: nil)
+                
+            } else {
+                
+                var location: CLLocation?
+                if (self.firstNameTextField.text?.isEmpty)! || (self.mediaURL.text?.isEmpty)! {
+                    
+                    let actionSheet = UIAlertController(title: "ERROR", message: "Missing Name or Website", preferredStyle: .alert)
+                    
+                    actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    self.present(actionSheet,animated: true, completion: nil)
+                }
+                else {
+                    
+                    let firstName = self.firstNameTextField.text!
+                    let lastName = self.lastNameTextField.text!
+                    let mapString = self.streetTextField.text!
+                    let mediaURL = self.mediaURL.text!
+                    
+                    if let placemarks = placemarks  {
+                        //if multiple results choose the first one
+                        location = placemarks.first?.location
+                        let coordinate = location?.coordinate
+                        
+                        let distanceSpan: CLLocationDegrees = 1000
+                        let locationCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake((coordinate?.latitude)!, (coordinate?.longitude)!)
+                        
+                        self.miniMapKitView.setRegion(MKCoordinateRegionMakeWithDistance(locationCoordinate, distanceSpan, distanceSpan), animated: true)
+                        
+                        let locationPin = OTMap_Annotation(title: "\(firstName) \(lastName)", subtitle: "\(mediaURL)", coordinate: coordinate!)
+                        self.miniMapKitView.addAnnotation(locationPin)
+                        
+                        
+                        let newLocationDictionary:[String:AnyObject] = ["firstName":firstName as AnyObject,
+                                                                        "lastName" :lastName as AnyObject,
+                                                                        "mapString": mapString as AnyObject,
+                                                                        "mediaURL": mediaURL as AnyObject,
+                                                                        "latitude":locationCoordinate.latitude as AnyObject,
+                                                                        "longitude":locationCoordinate.longitude as AnyObject]
+                        
+                        self.sendToPost = StudentDataSource.postUserInfo(newLocationDictionary)
+                        self.postLocationButton.isHidden = false
+                    }
+                }
+            }
         }
+    }
+    @IBAction func postLocation(_ sender: UIButton) {
         
-        geocodeButton.isHidden = true
         activityIndicatorView.isHidden = false
         activityIndicatorView.startAnimating()
-    }
-    
-    //MARK- POST newLocation
-    
-    private func postNewGeocodeLocation(_ address: String, withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
-        geocodeButton.isHidden = false
-        activityIndicatorView.stopAnimating()
         
-        if error != nil {
+        OTMap_Tasks().postNewLocation(sendToPost!) {(success,error) in
             
-            let actionSheet = UIAlertController(title: "ERROR", message: "could not get address, pls check your entry", preferredStyle: .alert)
+            self.activityIndicatorView.isHidden = true
+            self.activityIndicatorView.stopAnimating()
             
-            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(actionSheet,animated: true, completion: nil)
-            
-            locationLabel.text = "no address found"
-            
-        } else {
-            
-            var location: CLLocation?
-           
-            //do some prep
-            if let placemarks = placemarks  {
-                //if multiple results choose the first one
-                location = placemarks.first?.location
-                let coordinate = location?.coordinate
+            OTMap_Tasks().performUpdatesOnMainQueue {
                 
-                let mediaURLText = mediaURL.text
-                
-                //display coordinates on view screen
-                locationLabel.text = "\(coordinate!.latitude) " + "\(coordinate!.longitude)"
-                
-                OTMap_Tasks().postNewLocation(mediaURLText ?? "http://udacity.com",coordinate!,address) {(success,error) in
+                if success == false{
                     
-                    performUpdatesOnMainQueue {
-                        
-                        if success == false{
-                            
-                            let actionSheet = UIAlertController(title: "ERROR", message: "record update failed to post", preferredStyle: .alert)
-                            
-                            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                            self.present(actionSheet,animated: true, completion: nil)
-                            
-                        } else {
-                            
-                            let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
-                            self.present(controller, animated: true, completion: nil)
-                            
-                        }
-                    }
+                    let actionSheet = UIAlertController(title: "ERROR", message: "record update failed to post", preferredStyle: .alert)
+                    
+                    actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    self.present(actionSheet,animated: true, completion: nil)
+                    
+                } else {
+                    
+                    let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
+                    self.present(controller, animated: true, completion: nil)
+                    
                 }
             }
         }
@@ -107,3 +141,5 @@ class PostViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
 }
+
+

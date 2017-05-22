@@ -15,17 +15,15 @@ class TabBarViewController: UITabBarController {
         OTMap_Tasks().udacityLogoutMethod() {(success, errorString) in
             
             if success {
-                performUpdatesOnMainQueue {
+                OTMap_Tasks().performUpdatesOnMainQueue {
                     self.dismiss(animated: true, completion: nil)
                     }
             } else {
-               
                 let actionSheet = UIAlertController(title: "Error During Logout", message: errorString?.localizedDescription, preferredStyle: .alert)
                 
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(actionSheet,animated: true,completion: nil)
             }
         }
-        
     }
 }

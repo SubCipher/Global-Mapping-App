@@ -22,7 +22,6 @@ enum ReachabilityStatus {
     case reachableViaWiFi
     case reachableViaWWAN
     case reachable
-    
 }
 
 class OTMap_NetworkReachability: NSObject {
@@ -77,7 +76,6 @@ class OTMap_NetworkReachability: NSObject {
         
         return OTMap_NetworkReachability(hostAddress: localWifiAddress)
     }
-    
     
     private var notifying: Bool = false
     

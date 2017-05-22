@@ -25,7 +25,7 @@ class ShowStudentLocationViewController: UIViewController {
     @IBOutlet weak var uniqueKey: UILabel!
     @IBOutlet weak var createdAt: UILabel!
     
-    var showStudentAtLocation: StudentInformation!
+    var showStudentAtLocation: StudentDataSource.StudentInformation!
     
     override func viewDidLoad() {
         super.viewDidLoad()

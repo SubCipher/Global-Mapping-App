@@ -20,11 +20,11 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
             
             if success {
                 
-                performUpdatesOnMainQueue {
+                OTMap_Tasks().performUpdatesOnMainQueue {
                     
                     var annotations = [MKPointAnnotation]()
                     
-                    for student in StudentInformationArray {
+                    for student in StudentDataSource.sharedInstance.StudentData {
                         
                         let lat = CLLocationDegrees(student.latitude)
                         let long = CLLocationDegrees(student.longitude )
@@ -55,7 +55,6 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
             }
         })
     }
-    
     
     //MARK: - MKMapViewDelegate
     

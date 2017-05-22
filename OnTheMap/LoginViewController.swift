@@ -8,8 +8,9 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet weak var loginActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var connectionStatus: UIView!
     
     //check for an open connection to the internet
@@ -19,26 +20,38 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var userAccountTextField: UITextField!
     @IBOutlet weak var userPwdTextField: UITextField!
     
+    var isDeviceVertical = true
     var emailAccountText: String? = nil
     var userPwdText: String? = nil
 
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        loginActivityIndicator.isHidden = true
+        setUpTextField()
+
         checkReachability()
-        
-        //set notificationCenter for changes in network state
+                 //set notificationCenter for changes in network state
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityDidChange(_:)), name: NSNotification.Name(rawValue: ReachabilityDidChangeNotificationName), object: nil)
         _ = reachability?.startNotifier()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+
+       internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         
-        //hide until empty fields flagged at login
-        
+        if traitCollection.verticalSizeClass == .compact {
+            isDeviceVertical = false
+        }
+        else {
+            isDeviceVertical = true
+        }
     }
+
+    private func setUpTextField(){
+        userAccountTextField.delegate = self
+        userPwdTextField.delegate = self
+    }
+    
  
     //remove notificationCenter when class is deallocated
     //https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Deinitialization.html
@@ -58,11 +71,16 @@ class LoginViewController: UIViewController {
         
         OTMap_Tasks.sharedInstance().udacityPostForLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
             
-            performUpdatesOnMainQueue {
+            OTMap_Tasks().performUpdatesOnMainQueue {
                 
                 if success {
+                    self.loginActivityIndicator.isHidden = true
+                    self.loginActivityIndicator.stopAnimating()
                     self.completeLogin()
                 } else {
+                    self.loginActivityIndicator.isHidden = true
+                    self.loginActivityIndicator.stopAnimating()
+
                     
                     //MARK: failed login alert
                     let actionSheet = UIAlertController(title: "ERROR", message: errorString?.localizedDescription, preferredStyle: .alert)
@@ -72,6 +90,8 @@ class LoginViewController: UIViewController {
                 }
             }
         }
+        loginActivityIndicator.isHidden = false
+        loginActivityIndicator.startAnimating()
     }
     
     func completeLogin(){
@@ -102,12 +122,61 @@ extension LoginViewController {
             
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actionSheet,animated: true, completion: nil)
-            
         }
     }
     
     
     func reachabilityDidChange(_ notification: Notification){
         checkReachability()
+    }
+    
+    private func subscribeToKeyboardNotifications(){
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    private func unsubscribeFromKeyboardNotifications(){
+        
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    internal func keyboardWillShow(_ notification: Notification){
+      
+        let heightVar = !isDeviceVertical ? CGFloat(10.0) : CGFloat(0.0)
+        if isDeviceVertical == false {
+            view.frame.origin.y = heightVar - getKeyboardHeight(notification)
+        }
+    }
+    
+    //return frame to original position
+    internal func keyboardWillHide(_ notification: Notification){
+        view.frame.origin.y = 0
+    }
+    
+    private func getKeyboardHeight(_ notification: Notification)-> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        
+        return keyboardSize.cgRectValue.height
+    }
+    
+    //MARK: - delegate methods
+    
+    internal func textFieldDidBeginEditing(_ : UITextField) {
+        //allow image push when typing in textField
+        subscribeToKeyboardNotifications()
+    }
+    
+    internal func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        //remove form notification after editing textField
+        unsubscribeFromKeyboardNotifications()
+    }
+    
+    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return textField.resignFirstResponder()
     }
 }
