@@ -15,9 +15,16 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
     //geocode implementation reference https://cocoacasts.com/forward-and-reverse-geocoding-with-clgeocoder-part-1/
     
     @IBOutlet weak var miniMapKitView: MKMapView!
+    /*-------------------------------------------------------------------------*/
+    
+    //API Cannot Fetch Account Names
+    //https://discussions.udacity.com/t/udacity-api-method-to-fetch-account-names/249306/2
     
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
+    
+    
+    /*-------------------------------------------------------------------------*/
     
     @IBOutlet weak var streetTextField: UITextField!
     @IBOutlet weak var cityTextField: UITextField!
