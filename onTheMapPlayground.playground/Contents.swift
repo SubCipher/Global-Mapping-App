@@ -86,8 +86,32 @@ let StudentsLocationArray = [
     
     (latitude: 41.883855599999997, mapString: " Chicago ", createdAt: "2017-05-11T14:44:49.490Z", uniqueKey: 0, objectId: "iDpspqZkOU", updatedAt: "2017-05-11T14:44:49.490Z", firstName: "K", longitude: -87.632350500000001, mediaURL: "http://DuckDuckGo.com", lastName: "art00")]
 for date in StudentsLocationArray{
-    
-
-print(date.createdAt)
+ //print(date.createdAt)
 
 }
+
+
+
+let urlString = "https://parse.udacity.com/parse/classes/StudentLocation"
+
+let url = URL(string: urlString)
+
+let request = NSMutableURLRequest(url: url!)
+
+request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+
+
+let session = URLSession.shared
+let task = session.dataTask(with: request as URLRequest) { data, response, error in
+    if error != nil { // Handle error
+        return
+   }
+  //  print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+}
+//task.resume()
+
+
+
+
+

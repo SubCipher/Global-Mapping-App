@@ -12,7 +12,6 @@ import UIKit
 class ShowStudentLocationViewController: UIViewController {
     
     @IBOutlet weak var firstName: UILabel!
-    
     @IBOutlet weak var lastName: UILabel!
     
     @IBOutlet weak var latitude: UILabel!
@@ -41,6 +40,5 @@ class ShowStudentLocationViewController: UIViewController {
         longitutde.text = "\(showStudentAtLocation.longitude)"
         mapString.text = showStudentAtLocation.mapString
         mediaURL.text = showStudentAtLocation.mediaURL
-        
     }
 }

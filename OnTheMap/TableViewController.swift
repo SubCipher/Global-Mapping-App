@@ -38,11 +38,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     internal func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
-        let showViewController = self.storyboard!.instantiateViewController(withIdentifier: "UpdateStudentLocationViewController") as! ShowStudentLocationViewController
+        let showViewController = self.storyboard!.instantiateViewController(withIdentifier: "ShowStudentLocationViewController") as! ShowStudentLocationViewController
         showViewController.showStudentAtLocation = StudentDataSource.sharedInstance.StudentData[indexPath.row]
         self.navigationController!.pushViewController(showViewController, animated: true)
     }
-    
+    //Delete Row
     internal func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             

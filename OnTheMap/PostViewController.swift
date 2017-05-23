@@ -10,9 +10,10 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class PostViewController: UIViewController  {
+class PostViewController: UIViewController, UITextFieldDelegate  {
     
-    //geocode implementation based on tutorial from https://cocoacasts.com/forward-and-reverse-geocoding-with-clgeocoder-part-1/
+    //geocode implementation reference https://cocoacasts.com/forward-and-reverse-geocoding-with-clgeocoder-part-1/
+    
     @IBOutlet weak var miniMapKitView: MKMapView!
     
     @IBOutlet weak var firstNameTextField: UITextField!
@@ -34,8 +35,18 @@ class PostViewController: UIViewController  {
     var sendToPost: StudentDataSource.postUserInfo? = nil    
     override func viewDidLoad() {
         super.viewDidLoad()
+        textFieldDelegation()
         activityIndicatorView.isHidden = true
         postLocationButton.isHidden = true
+    }
+
+    func textFieldDelegation(){
+        firstNameTextField.delegate = self
+        lastNameTextField.delegate = self
+        streetTextField.delegate = self
+        cityTextField.delegate = self
+        countryTextField.delegate = self
+        mediaURL.delegate = self
     }
     
     @IBAction func geocodeAction(_ sender: UIButton) {
@@ -73,7 +84,7 @@ class PostViewController: UIViewController  {
                     self.present(actionSheet,animated: true, completion: nil)
                 }
                 else {
-                    
+                
                     let firstName = self.firstNameTextField.text!
                     let lastName = self.lastNameTextField.text!
                     let mapString = self.streetTextField.text!
@@ -95,14 +106,15 @@ class PostViewController: UIViewController  {
                         
                         let newLocationDictionary:[String:AnyObject] = ["firstName":firstName as AnyObject,
                                                                         "lastName" :lastName as AnyObject,
-                                                                        "mapString": mapString as AnyObject,
                                                                         "mediaURL": mediaURL as AnyObject,
+                                                                        "mapString": mapString as AnyObject,
+                                                                        "uniqueKey": StudentDataSource.sharedInstance.UniqueKey as AnyObject,
                                                                         "latitude":locationCoordinate.latitude as AnyObject,
                                                                         "longitude":locationCoordinate.longitude as AnyObject]
                         
                         self.sendToPost = StudentDataSource.postUserInfo(newLocationDictionary)
                         self.postLocationButton.isHidden = false
-                    }
+                   }
                 }
             }
         }
@@ -139,6 +151,20 @@ class PostViewController: UIViewController  {
     @IBAction func cancelPost(_ sender: UIBarButtonItem) {
         
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func subscribeToKeyboardNotifications(){
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(textFieldShouldReturn(_:)), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    private func unsubscribeFromKeyboardNotifications(){
+        
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return textField.resignFirstResponder()
     }
 }
 

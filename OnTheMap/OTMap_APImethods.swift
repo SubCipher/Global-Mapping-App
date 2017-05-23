@@ -24,13 +24,14 @@ extension OTMap_Tasks {
         /*2. make the request */
         
         let _ = taskForUdacityPOSTMethod( mutableMethod, jsonBody) { (results, error) in
-            
+        
             //*3. send values to competion handler */
             if let error = error {
                 completionHandlerForLogin(false, error)
             } else {
-                if let session = results?[OTMap_Tasks.JSONResponseKeys.SessionID] as? [String:AnyObject] {
-                    self.sessionID = session
+                if let session = results?[OTMap_Tasks.JSONResponseKeys.Account] as? [String:AnyObject] {
+                    StudentDataSource.sharedInstance.UniqueKey = session["key"] as! String
+                    
                     completionHandlerForLogin(true,nil)
                 } else {
                     completionHandlerForLogin(false, NSError(domain: "Bad login attemp", code: 0, userInfo: [NSLocalizedDescriptionKey: "could not login to Udacity account"]))
@@ -71,6 +72,7 @@ extension OTMap_Tasks {
                         }
                     }
                     completionHandlerForLocations(true,nil)
+                   
                 } else {
                     
                     completionHandlerForLocations(false,NSError(domain: "JSONResults", code: 1, userInfo: [NSLocalizedDescriptionKey:" could not get JSON data results"]))
@@ -81,6 +83,7 @@ extension OTMap_Tasks {
     
     //MARK: - append records to array
     func appendToStudentLocationArray(_ addRecord: StudentDataSource.StudentInformation){
+        
         if StudentDataSource.sharedInstance.StudentData.count < locationsToRetrieve {
             StudentDataSource.sharedInstance.StudentData.append(addRecord)
         } else {
@@ -94,7 +97,7 @@ extension OTMap_Tasks {
         
         let  mutableMethod = OTMap_Tasks.Constants.PostURL
         
-        let jsonBody = "{\"uniqueKey\": \"12345678\", \"firstName\": \"\(postLocation.firstName)\", \"lastName\": \"\(postLocation.lastName)\",\"mapString\": \"\(postLocation.mapString)\", \"mediaURL\": \"\(postLocation.mediaURL)\",\"latitude\": \(postLocation.latitude), \"longitude\": \(postLocation.longitude)}"
+        let jsonBody = "{\"uniqueKey\": \"\(StudentDataSource.sharedInstance.UniqueKey)\", \"firstName\": \"\(postLocation.firstName)\", \"lastName\": \"\(postLocation.lastName)\",\"mapString\": \"\(postLocation.mapString)\", \"mediaURL\": \"\(postLocation.mediaURL)\",\"latitude\": \(postLocation.latitude), \"longitude\": \(postLocation.longitude)}"
         
         let _ = taskForParsePOSTMethod(mutableMethod, jsonBody) {success, error in
             

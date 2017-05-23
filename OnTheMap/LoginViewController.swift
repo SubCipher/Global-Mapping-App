@@ -69,11 +69,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         emailAccountText = userAccountTextField.text
         userPwdText = userPwdTextField.text
         
+
         OTMap_Tasks.sharedInstance().udacityPostForLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
             
             OTMap_Tasks().performUpdatesOnMainQueue {
                 
                 if success {
+                    
+
                     self.loginActivityIndicator.isHidden = true
                     self.loginActivityIndicator.stopAnimating()
                     self.completeLogin()
@@ -81,7 +84,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     self.loginActivityIndicator.isHidden = true
                     self.loginActivityIndicator.stopAnimating()
 
-                    
                     //MARK: failed login alert
                     let actionSheet = UIAlertController(title: "ERROR", message: errorString?.localizedDescription, preferredStyle: .alert)
                     
@@ -124,7 +126,6 @@ extension LoginViewController {
             self.present(actionSheet,animated: true, completion: nil)
         }
     }
-    
     
     func reachabilityDidChange(_ notification: Notification){
         checkReachability()

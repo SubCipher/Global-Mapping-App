@@ -13,9 +13,11 @@ import MapKit
 //On the map data model
 
 class StudentDataSource {
-    
+    var UniqueKey = String()
+   
     static let sharedInstance = StudentDataSource()
     
+
     var StudentData = [StudentInformation]()
     var objectIDArray = [String]()
     
@@ -59,7 +61,7 @@ class StudentDataSource {
             mediaURL = (postInfo["mediaURL"] as? String) ?? ""
             
             mapString = (postInfo["mapString"] as? String) ?? ""
-            
+            uniqueKey = (postInfo["uniqueKey"] as? String) ?? " "
             latitude = (postInfo["latitude"] as? Double) ?? 00.0
             longitude = (postInfo["longitude"] as? Double) ?? 00.0
             
@@ -68,7 +70,7 @@ class StudentDataSource {
         var firstName: String
         var lastName: String
         var mapString: String
-        
+        var uniqueKey: String
         var mediaURL: String
         var latitude: Double
         var longitude: Double

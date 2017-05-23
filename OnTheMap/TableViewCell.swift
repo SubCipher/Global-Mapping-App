@@ -14,7 +14,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var webSiteLinks: UILabel!
     
     var studentLocation: StudentDataSource.StudentInformation? {  didSet {updateUI() }}
-    
+    //update pin annotation
     private func updateUI() {
         studentNameLabel?.text = "\(studentLocation?.firstName ?? "")" + "\(studentLocation?.lastName ?? "")"
         webSiteLinks?.text = studentLocation?.mediaURL ?? ""
