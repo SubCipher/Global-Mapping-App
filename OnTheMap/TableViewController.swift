@@ -18,6 +18,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         studentListTableView.rowHeight = UITableViewAutomaticDimension
     }
     
+    override func  viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        studentListTableView.reloadData()
+    }
+    
     // MARK: - Table view data source
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

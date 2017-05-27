@@ -49,7 +49,7 @@
 		20C51E351EAB97DA00C93A0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20C51E371EAB97DA00C93A0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20E99E441EC2BE5A006526EA /* ShowStudentLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowStudentLocationViewController.swift; sourceTree = "<group>"; };
-		20F517111ECE038B005CE68D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		20F517111ECE038B005CE68D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = OnTheMap/TableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +67,7 @@
 		201D17501EAC580D003730A4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				20F517111ECE038B005CE68D /* TableViewCell.swift */,
 				201D17511EAC580D003730A4 /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -122,7 +123,6 @@
 				2050ACF01EC162F800EAA9F3 /* TabBarViewController.swift */,
 				202EC2AC1EC44DF800392812 /* WebViewViewController.swift */,
 				20E99E441EC2BE5A006526EA /* ShowStudentLocationViewController.swift */,
-				20F517111ECE038B005CE68D /* TableViewCell.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";

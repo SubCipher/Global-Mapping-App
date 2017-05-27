@@ -26,7 +26,6 @@ enum ReachabilityStatus {
 
 class OTMap_NetworkReachability: NSObject {
     
-    
     private var networkReachability: SCNetworkReachability?
     
     init?(hostName: String) {

@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class ShowStudentLocationViewController: UIViewController {
     
     @IBOutlet weak var firstName: UILabel!

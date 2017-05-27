@@ -51,7 +51,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         userAccountTextField.delegate = self
         userPwdTextField.delegate = self
     }
-    
  
     //remove notificationCenter when class is deallocated
     //https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Deinitialization.html
@@ -66,17 +65,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func udacityLogin() {
         
+               
         emailAccountText = userAccountTextField.text
         userPwdText = userPwdTextField.text
         
-
+        
         OTMap_Tasks.sharedInstance().udacityPostForLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
-            
+       
             OTMap_Tasks().performUpdatesOnMainQueue {
                 
                 if success {
                     
-
                     self.loginActivityIndicator.isHidden = true
                     self.loginActivityIndicator.stopAnimating()
                     self.completeLogin()
@@ -103,6 +102,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+
+//MARK: - LoginViewController Extension
 extension LoginViewController {
     
     //MARK: - network reachability
@@ -158,6 +159,7 @@ extension LoginViewController {
     }
     
     private func getKeyboardHeight(_ notification: Notification)-> CGFloat {
+        
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
         

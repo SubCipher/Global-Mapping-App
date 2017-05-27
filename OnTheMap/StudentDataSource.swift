@@ -21,6 +21,9 @@ class StudentDataSource {
     var StudentData = [StudentInformation]()
     var objectIDArray = [String]()
     
+    var firstName:String? = nil
+    var lastName:String? = nil
+    
     struct StudentInformation {
         
         init(_ dictionary: [String:AnyObject]) {
@@ -51,7 +54,6 @@ class StudentDataSource {
         var mediaURL: String
         var lastName: String
     }
-    
     
     struct postUserInfo {
         

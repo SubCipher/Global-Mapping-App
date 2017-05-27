@@ -15,17 +15,7 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
     //geocode implementation reference https://cocoacasts.com/forward-and-reverse-geocoding-with-clgeocoder-part-1/
     
     @IBOutlet weak var miniMapKitView: MKMapView!
-    /*-------------------------------------------------------------------------*/
-    
-    //API Cannot Fetch Account Names
-    //https://discussions.udacity.com/t/udacity-api-method-to-fetch-account-names/249306/2
-    
-    @IBOutlet weak var firstNameTextField: UITextField!
-    @IBOutlet weak var lastNameTextField: UITextField!
-    
-    
-    /*-------------------------------------------------------------------------*/
-    
+
     @IBOutlet weak var streetTextField: UITextField!
     @IBOutlet weak var cityTextField: UITextField!
     @IBOutlet weak var countryTextField: UITextField!
@@ -48,15 +38,14 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
     }
 
     func textFieldDelegation(){
-        firstNameTextField.delegate = self
-        lastNameTextField.delegate = self
-        streetTextField.delegate = self
+
         cityTextField.delegate = self
         countryTextField.delegate = self
         mediaURL.delegate = self
     }
     
     @IBAction func geocodeAction(_ sender: UIButton) {
+        
         self.geocodeButton.isHidden = true
         self.activityIndicatorView.isHidden = false
         self.activityIndicatorView.startAnimating()
@@ -83,17 +72,9 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
             } else {
                 
                 var location: CLLocation?
-                if (self.firstNameTextField.text?.isEmpty)! || (self.mediaURL.text?.isEmpty)! {
-                    
-                    let actionSheet = UIAlertController(title: "ERROR", message: "Missing Name or Website", preferredStyle: .alert)
-                    
-                    actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                    self.present(actionSheet,animated: true, completion: nil)
-                }
-                else {
                 
-                    let firstName = self.firstNameTextField.text!
-                    let lastName = self.lastNameTextField.text!
+                    let firstName = StudentDataSource.sharedInstance.firstName ?? "name not available"
+                    let lastName = StudentDataSource.sharedInstance.lastName ?? "name not available"
                     let mapString = self.streetTextField.text!
                     let mediaURL = self.mediaURL.text!
                     
@@ -110,7 +91,6 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
                         let locationPin = OTMap_Annotation(title: "\(firstName) \(lastName)", subtitle: "\(mediaURL)", coordinate: coordinate!)
                         self.miniMapKitView.addAnnotation(locationPin)
                         
-                        
                         let newLocationDictionary:[String:AnyObject] = ["firstName":firstName as AnyObject,
                                                                         "lastName" :lastName as AnyObject,
                                                                         "mediaURL": mediaURL as AnyObject,
@@ -125,7 +105,7 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
                 }
             }
         }
-    }
+    
     @IBAction func postLocation(_ sender: UIButton) {
         
         activityIndicatorView.isHidden = false
@@ -146,14 +126,14 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
                     self.present(actionSheet,animated: true, completion: nil)
                     
                 } else {
-                    
+        
                     let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
                     self.present(controller, animated: true, completion: nil)
                     
                 }
             }
-        }
     }
+   }
     
     @IBAction func cancelPost(_ sender: UIBarButtonItem) {
         
@@ -174,5 +154,3 @@ class PostViewController: UIViewController, UITextFieldDelegate  {
         return textField.resignFirstResponder()
     }
 }
-
-

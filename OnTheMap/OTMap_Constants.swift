@@ -22,14 +22,17 @@ extension OTMap_Tasks {
 
         static let PostURL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt"
         static let SignUpURL = "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated"
+        static let UserApi = "https://www.udacity.com/api/users/"
     }
       struct JSONResponseKeys {
         //MARK: General
         static let Results = "results"
+    
         
         //MARK: Authorization
         static let SessionID = "session"
         static let Account = "account"
+        static let User = "user"
     }
     
     struct DefaultURL {

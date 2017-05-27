@@ -48,6 +48,7 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
                 }
                 
             } else {
+                
                 //failed download alert
                 let actionSheet = UIAlertController(title: "Error Downloading", message: errorString?.localizedDescription, preferredStyle: .alert)
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
