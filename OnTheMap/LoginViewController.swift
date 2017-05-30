@@ -23,20 +23,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var isDeviceVertical = true
     var emailAccountText: String? = nil
     var userPwdText: String? = nil
-
+    
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         loginActivityIndicator.isHidden = true
         setUpTextField()
-
-        checkReachability()
-                 //set notificationCenter for changes in network state
-        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityDidChange(_:)), name: NSNotification.Name(rawValue: ReachabilityDidChangeNotificationName), object: nil)
-        _ = reachability?.startNotifier()
     }
-
-       internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //run test to check internet connection
+        checkReachability()
+        
+        }
+    //check device orientation for keyBoard notification
+    internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
         if traitCollection.verticalSizeClass == .compact {
@@ -46,43 +48,44 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             isDeviceVertical = true
         }
     }
-
+    
     private func setUpTextField(){
         userAccountTextField.delegate = self
         userPwdTextField.delegate = self
     }
- 
+    
     //remove notificationCenter when class is deallocated
     //https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Deinitialization.html
     deinit {
         NotificationCenter.default.removeObserver(self)
         reachability?.stopNotifier()
+        
     }
     
     @IBAction func udacityAuthLogin(_ sender: AnyObject) {
-        udacityLogin()
-    }
-    
-    func udacityLogin() {
         
-               
+        self.loginActivityIndicator.isHidden = false
+        self.loginActivityIndicator.startAnimating()
         emailAccountText = userAccountTextField.text
-        userPwdText = userPwdTextField.text
+         userPwdText = userPwdTextField.text
         
         
         OTMap_Tasks.sharedInstance().udacityPostForLogin(emailAccountText ?? "", userPwdText ?? "") { (success,errorString) in
-       
+            
+            
+                        
             OTMap_Tasks().performUpdatesOnMainQueue {
                 
                 if success {
                     
                     self.loginActivityIndicator.isHidden = true
                     self.loginActivityIndicator.stopAnimating()
-                    self.completeLogin()
+                   self.completeLogin()
+                    
                 } else {
                     self.loginActivityIndicator.isHidden = true
                     self.loginActivityIndicator.stopAnimating()
-
+                    
                     //MARK: failed login alert
                     let actionSheet = UIAlertController(title: "ERROR", message: errorString?.localizedDescription, preferredStyle: .alert)
                     
@@ -91,17 +94,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }
-        loginActivityIndicator.isHidden = false
-        loginActivityIndicator.startAnimating()
     }
     
     func completeLogin(){
+      
+        let tabBarViewController = self.storyboard?.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
         
-        let controller = storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
-        present(controller, animated: true, completion: nil)
-    }
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        appDelegate.window?.rootViewController = tabBarViewController
+        
+        }
 }
-
 
 //MARK: - LoginViewController Extension
 extension LoginViewController {
@@ -128,10 +132,6 @@ extension LoginViewController {
         }
     }
     
-    func reachabilityDidChange(_ notification: Notification){
-        checkReachability()
-    }
-    
     private func subscribeToKeyboardNotifications(){
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
@@ -146,7 +146,7 @@ extension LoginViewController {
     }
     
     internal func keyboardWillShow(_ notification: Notification){
-      
+        
         let heightVar = !isDeviceVertical ? CGFloat(10.0) : CGFloat(0.0)
         if isDeviceVertical == false {
             view.frame.origin.y = heightVar - getKeyboardHeight(notification)

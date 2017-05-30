@@ -32,7 +32,7 @@ class OTMap_Tasks: NSObject {
             }
             
             guard (error == nil) else {
-                sendError("there was an error with your request")
+                sendError("There was an error with your request.  Check Your connection")
                 return
             }
             
@@ -84,7 +84,7 @@ class OTMap_Tasks: NSObject {
                 completionHandlerForUsername(nil, NSError(domain: "task for fetchUsername", code: 5, userInfo: userInfo))
             }
             guard (error == nil) else {
-                sendError("there was an error with your request")
+                sendError("There was an error with your request.")
                 return
             }
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >=  200 && statusCode <= 299 else {
@@ -92,7 +92,7 @@ class OTMap_Tasks: NSObject {
                 return
             }
             guard let data = data else {
-                sendError("no data was returned by the request")
+                sendError("No data was returned")
                 return
             }
             
@@ -151,7 +151,7 @@ class OTMap_Tasks: NSObject {
                 completionHandlerForGET(nil, NSError(domain: "task for loading student data ", code: 1, userInfo: userInfo))
             }
             guard (error == nil) else {
-                sendError("there was an error with your request")
+                sendError("There was an error with your request.")
                 return
             }
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >=  200 && statusCode <= 299 else {
@@ -195,7 +195,8 @@ class OTMap_Tasks: NSObject {
         DispatchQueue.main.async {
             updates()
         }
-    }
+        
+}
 
  
 }

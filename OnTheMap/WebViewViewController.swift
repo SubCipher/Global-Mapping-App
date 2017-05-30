@@ -15,12 +15,16 @@ class WebViewViewController: UIViewController {
     
     @IBOutlet weak var udacityWebview: UIWebView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setLinks()
         
+    }
+    
+    func setLinks() {
         let udacityURL = URL(string: OTMap_Tasks.Constants.SignUpURL)
         let udacityURLRequest = URLRequest(url: udacityURL!)
-        
+
         udacityWebview.loadRequest(udacityURLRequest)
     }
     

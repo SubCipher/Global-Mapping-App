@@ -15,6 +15,10 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+                
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         OTMap_Tasks.sharedInstance().loadStudentLocations(completionHandlerForLocations: { (success,errorString) in
             
@@ -46,7 +50,7 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
                     }
                     self.mapView.addAnnotations(annotations)
                 }
-                
+             
             } else {
                 
                 //failed download alert
@@ -80,9 +84,9 @@ class MapKitViewController: UIViewController, MKMapViewDelegate {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
             if let toOpen = view.annotation?.subtitle! {
-                //dont crash if location is missing link, use a default site
-                app.open(URL(string: toOpen) ?? (URL(string: "http://udacity.com")!))
+                app.open(URL(string: toOpen) ?? (URL(string: "http://udacity.com")!), completionHandler: nil)
             }
         }
+
     }
 }

@@ -105,15 +105,13 @@ class OTMap_NetworkReachability: NSObject {
     }
     
     func stopNotifier() {
-        if let reachability = networkReachability, notifying == true {
-            SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(),CFRunLoopMode.defaultMode as! CFString)
-            notifying = false
-        }
-    }
-    
-    deinit {
-        stopNotifier()
-    }
+        
+                    if let reachability = self.networkReachability, self.notifying == true {
+                    SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(),CFRunLoopMode.defaultMode as! CFString)
+                    self.notifying = false
+                }
+            }
+
     
     private var flags: SCNetworkReachabilityFlags {
         
